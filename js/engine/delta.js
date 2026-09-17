@@ -1,5 +1,5 @@
 // Дельта между двумя прогонами («маршрут перестроен») и развилки «что если».
-import { evaluateAll, LABELS } from './score.js';
+import { evaluateAll } from './score.js';
 import { tengeShort, unis } from './format.js';
 
 const ORDER = { fit: 0, near: 1, insufficient: 2, out: 3 };
@@ -22,7 +22,7 @@ export function diffRuns(prev, next) {
       }) ?? (better ? b.filters.find((f) => f.pass === false) : r.filters.find((f) => f.pass === false));
       changes.push({
         id: r.id, short: r.uni.short, kind: worse ? 'dropped' : 'added', from: b.status, to: r.status,
-        cause: cause ? `${LABELS[cause.key] ?? cause.key}: ${cause.detail}` : null,
+        cause: cause ? cause.detail : null,
       });
     } else if (r.status === 'fit' && b.status === 'fit' && r.rank !== b.rank) {
       changes.push({ id: r.id, short: r.uni.short, kind: r.rank < b.rank ? 'up' : 'down', from: b.rank, to: r.rank, score: r.score, prevScore: b.score });
@@ -56,9 +56,17 @@ export function whatIf(profile, universities, ctx, cities = []) {
       tries.push({ key: `lang:${l}`, label: `Учиться и на ${names[l]}`, patch: { languages: [...profile.languages, l] } });
     }
   }
-  return tries
-    .map((t) => ({ ...t, gain: evaluateAll({ ...profile, ...t.patch }, universities, ctx).summary.fit - base }))
-    .filter((t) => t.gain > 0)
+  const scored = tries
+    .map((t) => ({ ...t, family: t.key.split(/[+:]/)[0], gain: evaluateAll({ ...profile, ...t.patch }, universities, ctx).summary.fit - base }))
+    .filter((t) => t.gain > 0);
+  // в семье (ЕНТ, бюджет, город…) оставляем самое маленькое изменение для каждого уровня выигрыша,
+  // а потом берём по одной лучшей развилке на семью — так список не повторяется
+  const best = new Map();
+  for (const t of scored) {
+    const cur = best.get(t.family);
+    if (!cur || t.gain > cur.gain) best.set(t.family, t);
+  }
+  return [...best.values()]
     .sort((a, b) => b.gain - a.gain)
     .slice(0, 3)
     .map((t) => ({ ...t, text: `${t.label} → ещё ${unis(t.gain)}` }));

@@ -112,7 +112,7 @@ test('главный тест жюри: изменение бюджета зам
   const d = diffRuns(before, after);
   assert.ok(d.any && d.dropped.length > 0);
   assert.ok(d.dropped.every((x) => x.cause), 'у каждого выпавшего есть причина');
-  assert.match(d.dropped[0].cause, /Деньги/);
+  assert.match(d.dropped[0].cause, /деньгам|бюджет/i);
 });
 
 test('изменение города, экзамена и интереса тоже меняет результат', () => {
