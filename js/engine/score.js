@@ -34,7 +34,7 @@ export function evaluate(profile, uni, ctx) {
   const comps = [];        // мягкие слагаемые балла
   const gaps = [];         // чего нет в данных о вузе
   const missing = [];      // чего не хватает в профиле
-  const used = [];         // какие поля данных участвовали (для достоверности)
+  const used = [];         // какие поля данных участвовали (для достоверности и чипов источников)
   const use = (f, key, label) => {
     used.push({ key, label, ...provenance(f) });
     if (!known(f)) gaps.push({ key, label });
@@ -73,41 +73,55 @@ export function evaluate(profile, uni, ctx) {
     } else filters.push({ key: 'language', pass: null, detail: 'Язык обучения не проверен' });
   }
 
-  // 3. Порог ЕНТ вуза
+  // 3. Порог ЕНТ — у вуза он свой по каждой группе программ; берём самый низкий среди твоих направлений
   const ent = profile.ent ?? null;
+  let thr = null;
+  for (const p of programs) {
+    const f = p.threshold ?? uni.threshold;
+    if (known(f) && (thr == null || val(f) < thr.v)) thr = { v: val(f), f, p };
+  }
   if (ent == null) {
     missing.push({ key: 'ent', label: 'балл ЕНТ' });
     filters.push({ key: 'ent', pass: null, detail: 'Без балла ЕНТ порог не проверить' });
-  } else if (use(uni.threshold, 'threshold', 'порог ЕНТ')) {
-    const thr = val(uni.threshold);
-    if (ent >= thr) {
-      filters.push({ key: 'ent', pass: true, detail: `Порог ${thr}, у тебя ${ent} — запас ${ent - thr}` });
-      comps.push({ key: 'ent', max: WEIGHTS.ent, points: round(WEIGHTS.ent * (0.4 + 0.6 * clamp01((ent - thr) / 40))),
-        text: `Запас по ЕНТ · порог ${thr}, у тебя ${ent}` });
+  } else if (thr) {
+    use(thr.f, 'threshold', `порог ЕНТ${thr.p.gop ? ` (${thr.p.gop})` : ''}`);
+    const label = thr.p.gop ? `по группе ${thr.p.gop}` : '';
+    if (ent >= thr.v) {
+      filters.push({ key: 'ent', pass: true, detail: `Порог вуза ${thr.v}${label ? ` ${label}` : ''}, у тебя ${ent} — запас ${ent - thr.v}` });
+      comps.push({ key: 'ent', max: WEIGHTS.ent, points: round(WEIGHTS.ent * (0.4 + 0.6 * clamp01((ent - thr.v) / 40))),
+        text: `Запас по ЕНТ · порог ${thr.v}, у тебя ${ent}` });
     } else {
-      const gap = thr - ent;
-      filters.push({ key: 'ent', pass: false, severity: gap <= 15 ? 'near' : 'out', gap, detail: `Порог вуза ${thr}, у тебя ${ent} — не хватает ${pts(gap)}` });
+      const gap = thr.v - ent;
+      filters.push({ key: 'ent', pass: false, severity: gap <= 15 ? 'near' : 'out', gap, detail: `Порог вуза ${thr.v}${label ? ` ${label}` : ''}, у тебя ${ent} — не хватает ${pts(gap)}` });
     }
-  } else filters.push({ key: 'ent', pass: null, detail: 'Порог вуза не проверен' });
+  } else {
+    gaps.push({ key: 'threshold', label: 'порог ЕНТ' });
+    filters.push({ key: 'ent', pass: null, detail: 'Порог вуза не проверен' });
+  }
 
   // 4. Деньги: платно (бюджет против стоимости со скидкой) или грант (балл против прошлогоднего проходного)
   const budget = profile.budget; // null — не знаю; 0 — только грант; число — ₸ в год
   let cost = null;
+  const seenDir = new Set();
   for (const p of programs) {
+    if (seenDir.has(p.direction)) continue; // стоимость одна на направление
+    seenDir.add(p.direction);
+    use(p.tuition, `tuition:${p.direction}`, `стоимость · ${dirLabel(p.direction)}`);
     const c = costFor(uni, p, ent);
-    use(p.tuition, `tuition:${p.direction}`, `стоимость «${p.name}»`);
     if (c.final != null && (cost == null || c.final < cost.final)) cost = { ...c, program: p };
   }
   let grant = null;
+  let grantKnown = false;
   if (ent != null) {
     for (const p of programs) {
-      const g = p.gop ? grants[p.gop] : null;
-      if (!g) continue;
-      use(g.pass, `grant:${p.gop}`, `проходной на грант ${p.gop}`);
-      if (!known(g.pass)) continue;
-      const diff = ent - val(g.pass);
-      if (!grant || diff > grant.diff) grant = { gop: p.gop, name: g.name, pass: val(g.pass), diff, program: p, prov: provenance(g.pass) };
+      const f = p.grantPass ?? (p.gop ? grants[p.gop]?.pass : null);
+      if (!known(f)) continue;
+      grantKnown = true;
+      use(f, `grant:${p.gop}`, `проходной на грант · ${p.gop}`);
+      const diff = ent - val(f);
+      if (!grant || diff > grant.diff) grant = { gop: p.gop, name: p.name, pass: val(f), diff, program: p, prov: provenance(f) };
     }
+    if (!grantKnown && programs.length) gaps.push({ key: 'grant', label: 'проходной на грант' });
   }
   const paidOk = budget != null && budget > 0 && cost != null && cost.final <= budget;
   const grantOk = grant != null && grant.diff >= 0;
@@ -115,25 +129,25 @@ export function evaluate(profile, uni, ctx) {
     missing.push({ key: 'budget', label: 'бюджет' });
     filters.push({ key: 'money', pass: null, detail: 'Не знаем ни бюджета, ни шансов на грант' });
   } else if (budget === 0) {
-    if (!grant) filters.push({ key: 'money', pass: null, detail: ent == null ? 'Только грант, а балла ЕНТ пока нет' : 'Проходной на грант по этой группе не проверен' });
+    if (!grant) filters.push({ key: 'money', pass: null, detail: ent == null ? 'Только грант, а балла ЕНТ пока нет' : 'Прошлогодний проходной на грант по твоим группам в этом вузе неизвестен' });
     else if (grantOk) {
-      filters.push({ key: 'money', pass: true, detail: `Грант: в прошлом году проходили с ${grant.pass}, у тебя ${ent} (+${grant.diff}). Ориентир, не гарантия` });
+      filters.push({ key: 'money', pass: true, detail: `Грант: в 2025 сюда проходили с ${grant.pass} (${grant.gop}), у тебя ${ent} (+${grant.diff}). Ориентир, не гарантия` });
       comps.push({ key: 'money', max: WEIGHTS.money, points: round(WEIGHTS.money * (0.5 + 0.5 * clamp01(grant.diff / 20))),
         text: `Шанс на грант · выше прошлогоднего проходного на ${grant.diff}` });
     } else {
       const gap = -grant.diff;
-      filters.push({ key: 'money', pass: false, severity: gap <= 10 ? 'near' : 'out', gap, detail: `Только грант: в прошлом году проходили с ${grant.pass}, у тебя ${ent} — не хватает ${pts(gap)}` });
+      filters.push({ key: 'money', pass: false, severity: gap <= 10 ? 'near' : 'out', gap, detail: `Только грант: в 2025 сюда проходили с ${grant.pass} (${grant.gop}), у тебя ${ent} — не хватает ${pts(gap)}` });
     }
   } else if (budget != null) {
     if (cost == null && !grant) filters.push({ key: 'money', pass: null, detail: 'Стоимость обучения не проверена' });
     else if (paidOk) {
       const margin = clamp01((budget - cost.final) / budget);
       const d = cost.discount ? ` со скидкой ${cost.discount.percent}%` : '';
-      filters.push({ key: 'money', pass: true, detail: `Платно${d}: ${tengeShort(cost.final)} в год при бюджете ${tengeShort(budget)}` });
+      filters.push({ key: 'money', pass: true, detail: `Платно${d}: от ${tengeShort(cost.final)} в год при бюджете ${tengeShort(budget)}` });
       comps.push({ key: 'money', max: WEIGHTS.money, points: round(WEIGHTS.money * (0.5 + 0.5 * margin)),
-        text: `Запас по бюджету · ${tengeShort(cost.final)}${d} из ${tengeShort(budget)}` });
+        text: `Запас по бюджету · от ${tengeShort(cost.final)}${d} из ${tengeShort(budget)}` });
     } else if (grantOk) {
-      filters.push({ key: 'money', pass: true, detail: `Платно дорого (${cost ? tengeShort(cost.final) : '—'}), но по гранту проходил бы: прошлогодний проходной ${grant.pass}, у тебя ${ent}` });
+      filters.push({ key: 'money', pass: true, detail: `Платно дорого (${cost ? `от ${tengeShort(cost.final)}` : 'стоимость неизвестна'}), но по гранту проходил бы: в 2025 сюда проходили с ${grant.pass} (${grant.gop}), у тебя ${ent}` });
       comps.push({ key: 'money', max: WEIGHTS.money, points: round(WEIGHTS.money * (0.3 + 0.5 * clamp01(grant.diff / 20))),
         text: `Только через грант · выше прошлогоднего проходного на ${grant.diff}` });
     } else {
@@ -142,7 +156,7 @@ export function evaluate(profile, uni, ctx) {
       const nearGrant = grant && grant.diff >= -10;
       const parts = [];
       if (cost) parts.push(`платно от ${tengeShort(cost.final)}, твой бюджет ${tengeShort(budget)}`);
-      if (grant) parts.push(`на грант в прошлом году проходили с ${grant.pass}, у тебя ${ent}`);
+      if (grant) parts.push(`на грант в 2025 сюда проходили с ${grant.pass}, у тебя ${ent}`);
       filters.push({ key: 'money', pass: false, severity: nearMoney || nearGrant ? 'near' : 'out', gap: moneyGap, detail: `Не проходит по деньгам: ${parts.join('; ')}` });
     }
   }
@@ -183,7 +197,8 @@ export function evaluate(profile, uni, ctx) {
   const score = status === 'fit' || status === 'near' ? round((comps.reduce((s, c) => s + c.points, 0) / applicable) * 100) : null;
   const facts = used.filter((u) => u.kind === 'fact').length;
   const demos = used.filter((u) => u.kind === 'demo').length;
-  const quality = facts + demos ? facts / (facts + demos) : 0;
+  // пробелы в данных тоже снижают качество: неизвестное поле — это не «ничего», а минус к достоверности
+  const quality = facts + demos + gaps.length ? facts / (facts + demos + gaps.length) : 0;
   const confidence = round(applicable * (0.6 + 0.4 * quality));
   const reasons = [...outs, ...nears].map((f) => f.detail);
 

@@ -5,11 +5,10 @@ import { diffRuns, whatIf } from '../js/engine/delta.js';
 import { buildRoadmap, nextStep, progress } from '../js/engine/roadmap.js';
 import { fact, demo, unknown } from '../js/engine/facts.js';
 import { UNIVERSITIES } from '../data/universities.js';
-import { GRANTS } from '../data/grants.js';
 import { DIRECTIONS, CITIES, directionLabel } from '../data/directions.js';
 import { CALENDAR, ENT_PROFILE, ENT_COMMON } from '../data/calendar.js';
 
-const ctx = { grants: GRANTS, directionLabel };
+const ctx = { directionLabel };
 const base = { interests: ['it'], ent: 100, budget: 2_000_000, languages: ['ru', 'en'], cities: ['Алматы'], relocate: false, dorm: true };
 
 test('веса в сумме дают 100', () => {
@@ -47,10 +46,11 @@ test('у отказа всегда есть причина', () => {
   assert.match(r.reasons[0], /не твой город/);
 });
 
-test('близкий вариант: не хватает денег, но разрыв небольшой', () => {
-  const r = evaluate({ ...base, ent: 80, budget: 1_800_000 }, UNIVERSITIES.find((u) => u.id === 'kaznu'), ctx);
+test('близкий вариант: не хватает баллов до порога вуза, но разрыв небольшой', () => {
+  // КазНУ, IT: порог по B057 — 90; с 80 баллами не хватает 10 → «близко», причина названа
+  const r = evaluate({ ...base, ent: 80 }, UNIVERSITIES.find((u) => u.id === 'kaznu'), ctx);
   assert.equal(r.status, 'near');
-  assert.match(r.nearGap, /не проходит по деньгам/i);
+  assert.match(r.nearGap, /не хватает 10 баллов/);
 });
 
 test('неизвестное поле не отсеивает вуз и не начисляет баллы, а понижает достоверность', () => {
@@ -80,15 +80,22 @@ test('только грант: сравниваем с прошлогодним 
   const ok = evaluate({ ...base, budget: 0, ent: 105 }, uni, ctx);
   assert.equal(ok.status, 'fit');
   assert.match(ok.filters.find((f) => f.key === 'money').detail, /не гарантия/);
-  const no = evaluate({ ...base, budget: 0, ent: 92 }, uni, ctx);
+  const no = evaluate({ ...base, budget: 0, ent: 85 }, uni, ctx);
   assert.equal(no.status, 'near');
 });
 
-test('скидка за балл снижает стоимость', () => {
-  const kbtu = UNIVERSITIES.find((u) => u.id === 'kbtu');
-  const cheap = evaluate({ ...base, ent: 125, budget: 1_500_000 }, kbtu, ctx);
-  assert.equal(cheap.cost.discount.percent, 50);
-  assert.equal(cheap.status, 'fit');
+test('порог вуза берётся по группе программ, а не один на вуз', () => {
+  // КазНУ: порог по B057 — 90, по B058 — 110; для направления IT берём самый низкий
+  const r = evaluate({ ...base, ent: 95 }, UNIVERSITIES.find((u) => u.id === 'kaznu'), ctx);
+  assert.equal(r.status, 'fit');
+  assert.match(r.filters.find((f) => f.key === 'ent').detail, /порог вуза 90/i);
+});
+
+test('вуз без проверенного порога не отсеивается: порог уходит в пробелы данных', () => {
+  const r = evaluate({ ...base, budget: 5_000_000 }, UNIVERSITIES.find((u) => u.id === 'kimep'), ctx);
+  assert.equal(r.status, 'fit');
+  assert.ok(r.gaps.some((g) => g.key === 'threshold'));
+  assert.equal(r.filters.find((f) => f.key === 'ent').pass, null);
 });
 
 test('факты и демо считаются в качестве данных', () => {
@@ -99,15 +106,15 @@ test('факты и демо считаются в качестве данных
 });
 
 test('с высоким баллом грант перекрывает нехватку бюджета — и это объяснено', () => {
-  const r = evaluate({ ...base, ent: 100, budget: 600_000 }, UNIVERSITIES.find((u) => u.id === 'kaznu'), ctx);
+  const r = evaluate({ ...base, ent: 100, budget: 300_000 }, UNIVERSITIES.find((u) => u.id === 'kaznu'), ctx);
   assert.equal(r.status, 'fit');
   assert.match(r.filters.find((f) => f.key === 'money').detail, /по гранту/);
 });
 
 test('главный тест жюри: изменение бюджета заметно меняет результат, и дельта объясняет почему', () => {
-  // балл 90 — ниже прошлогоднего проходного на грант, поэтому решает именно бюджет
-  const before = evaluateAll({ ...base, ent: 90 }, UNIVERSITIES, ctx);
-  const after = evaluateAll({ ...base, ent: 90, budget: 600_000 }, UNIVERSITIES, ctx);
+  // балл 70 — ниже прошлогодних проходных на грант в большинстве вузов, поэтому решает именно бюджет
+  const before = evaluateAll({ ...base, ent: 70, relocate: true }, UNIVERSITIES, ctx);
+  const after = evaluateAll({ ...base, ent: 70, relocate: true, budget: 600_000 }, UNIVERSITIES, ctx);
   assert.ok(after.summary.fit < before.summary.fit);
   const d = diffRuns(before, after);
   assert.ok(d.any && d.dropped.length > 0);

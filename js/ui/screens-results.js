@@ -328,15 +328,25 @@ export function sources(root, ctx) {
   const list = ctx.universities.map((u) => {
     const rows = [];
     const add = (label, f) => rows.push(`<div class="src-row"><span>${esc(label)}</span>${provChip(provenance(f))}</div>`);
-    add('Порог ЕНТ', u.threshold); add('Языки обучения', u.languages); add('Общежитие', u.dorm);
-    for (const pr of u.programs) add(`Стоимость «${pr.name}»`, pr.tuition);
+    add('Языки обучения', u.languages); add('Общежитие', u.dorm);
+    const seen = new Set();
+    for (const pr of u.programs) {
+      if (!seen.has(pr.direction)) { seen.add(pr.direction); add(`Стоимость · ${ctx.directionLabel(pr.direction)} · от ${val(pr.tuition) != null ? tengeShort(val(pr.tuition)) : '—'}`, pr.tuition); }
+      if (pr.gop) add(`${pr.gop} ${pr.name}: грант 2025 от ${val(pr.grantPass) ?? '—'}, порог ${val(pr.threshold) ?? '—'}`, val(pr.grantPass) != null ? pr.grantPass : pr.threshold);
+    }
     return `<div class="card src-uni"><b class="display h3">${esc(u.short)}</b><a class="link small" href="${esc(u.website)}" target="_blank" rel="noopener">${esc(u.website)}</a>${rows.join('')}</div>`;
   }).join('');
-  const grants = Object.entries(ctx.grants).map(([code, g]) => `<div class="src-row"><span>${code} · ${esc(g.name)} — проходной ${val(g.pass) ?? '—'}</span>${provChip(provenance(g.pass))}</div>`).join('');
   const cal = Object.values(ctx.calendar).map((c) => `<div class="src-row"><span>${esc(c.label)} — ${esc(val(c.when) ?? '—')}</span>${provChip(provenance(c.when))}</div>`).join('');
+  const thr = val(ctx.thresholds);
+  const thrRow = thr ? `<div class="src-row"><span>Пороги ЕНТ 2026: национальные вузы ${thr.national}, педагогика и право ${thr.pedagogy}, медицина ${thr.medicine}, остальные ${thr.other}</span>${provChip(provenance(ctx.thresholds))}</div>` : '';
+  const facts = ctx.universities.flatMap((u) => u.programs.flatMap((p) => [p.tuition, p.grantPass, p.threshold])).filter((f) => f?.kind === 'fact').length;
+  const total = ctx.universities.reduce((n, u) => n + u.programs.length * 3, 0);
   root.innerHTML = `<section class="sources">
     <div><span class="eyebrow">Честность данных</span><h2 class="display h2">Источники</h2><p class="lead">Каждое значение хранится вместе с происхождением. <span class="prov fact">✓ источник</span> — есть ссылка и дата проверки. <span class="prov demo">◌ демо</span> — демонстрационное. <span class="prov unknown">⊘ нет данных</span> — не влияет на балл, снижает достоверность.</p></div>
-    <div class="card"><b class="display h3">Проходные баллы на грант (прошлый год)</b><p class="small muted">Ориентир, не гарантия: конкурс каждый год свой.</p>${grants}</div>
+    <div class="card"><b class="display h3">Откуда данные</b>
+      <p class="small" style="margin-top:6px">Проходные баллы на грант и пороги вузов — итоги конкурса 2025 года по каждому вузу и группе программ (агрегатор <a class="link" href="https://univision.kz" target="_blank" rel="noopener">univision.kz</a>). Стоимость — прайсы вузов 2025 года там же, для КБТУ, КИМЭП и Нархоз — публикации <a class="link" href="https://er10.kz" target="_blank" rel="noopener">er10.kz</a> и <a class="link" href="https://bes.media" target="_blank" rel="noopener">bes.media</a>. Даты кампании — Национальный центр тестирования.</p>
+      <p class="small muted" style="margin-top:6px">Проверено значений со ссылкой: <b>${facts}</b> из ${total} полей по программам. Языки обучения и общежития пока помечены «демо» — не сверены с сайтами вузов.</p>
+      ${thrRow}</div>
     <div class="card"><b class="display h3">Календарь приёмной кампании</b>${cal}</div>
     ${list}
     <div class="bottom-nav"><button class="btn ghost" data-go="#/">На главную</button></div>
