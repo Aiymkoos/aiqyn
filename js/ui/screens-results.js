@@ -14,13 +14,42 @@ import { directionLabel, langLabel } from '../../data/directions.js';
 const TYPE = { national: 'национальный', state: 'государственный', private: 'частный', international: 'международный', autonomous: 'автономный' };
 const footHTML = (s) => `<span>рассмотрено <b>${s.total}</b></span><span>подходят <b>${s.fit}</b></span><span>близко <b>${s.near}</b></span><span>нет данных <b>${s.insufficient}</b></span><span>не проходят <b>${s.out}</b></span>`;
 
+/* взлётная полоса: каждый подходящий и близкий вуз — маркер на шкале балла */
+const LANES = [['fit', 'подходят'], ['near', 'близко']];
+// шкала полосы: 40–100, ниже 40 подходящих почти не бывает; маркеры чередуют высоту, чтобы не слипаться
+const runX = (score) => Math.max(0, Math.min(100, ((score - 40) / 60) * 100));
+const ROWS = ['', 'lo', 'mid'];
+const planeHTML = (r, k, i = 0) => `<button class="plane ${k} landing ${ROWS[i % 3]}" data-plane="${r.id}" data-label="${esc(r.uni.short)}" style="left:${runX(r.score)}%; animation-delay:${i * 70}ms" title="${esc(r.uni.short)} · ${r.score}" aria-label="${esc(r.uni.short)}, балл ${r.score}"><b>${r.score}</b></button>`;
+function runwayHTML(run) {
+  return `<div class="runway" aria-label="Вузы по баллу подбора">
+    <div class="axis"><span>40</span><span style="left:${runX(60)}%">60</span><span style="left:${runX(80)}%">80</span><span style="left:100%">100</span></div>
+    ${LANES.map(([k, label]) => `<div class="lane ${k} ${run[k].length > 3 ? 'dense' : ''}" data-lane="${k}"><span class="tag" data-tag>${label} · ${run[k].length}</span>${run[k].map((r, i) => planeHTML(r, k, i)).join('')}</div>`).join('')}
+  </div>`;
+}
+function updateRunway(el, run) {
+  const existing = new Map($$('.plane', el).map((x) => [x.dataset.plane, x]));
+  for (const [k, label] of LANES) {
+    const lane = $(`[data-lane="${k}"]`, el);
+    $('[data-tag]', lane).textContent = `${label} · ${run[k].length}`;
+    lane.classList.toggle('dense', run[k].length > 3);
+    run[k].forEach((r, i) => {
+      let pl = existing.get(r.id);
+      if (!pl) { const t = document.createElement('div'); t.innerHTML = planeHTML(r, k, i); pl = t.firstElementChild; lane.appendChild(pl); }
+      else { pl.className = `plane ${k} ${ROWS[i % 3]}`; if (pl.parentElement !== lane) lane.appendChild(pl); pl.style.left = `${runX(r.score)}%`; pl.querySelector('b').textContent = r.score; pl.title = `${r.uni.short} · ${r.score}`; }
+      existing.delete(r.id);
+    });
+  }
+  for (const pl of existing.values()) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 400); }
+}
+
 /* ---------- 4. Табло ---------- */
 export function board(root, ctx) {
   let run = ctx.compute(getProfile());
   const p = getProfile();
   root.innerHTML = `<section class="boardscreen">
     <div class="top"><div><span class="eyebrow">Этап 4 · Рекомендации</span><h2 class="display h2">Табло вылетов</h2></div>
-      <p class="small muted">Нажми на строку — увидишь, из чего собран балл и где источник каждой цифры.</p></div>
+      <p class="small">Маркеры на полосе — вузы по баллу. Талон открывается по нажатию: из чего собран балл и где источник каждой цифры.</p></div>
+    <div data-runway>${runwayHTML({ fit: [], near: [] })}</div>
     <div data-board>${boardHTML([], { skeleton: true })}</div>
     <div data-below></div>
     <div class="bottom-nav"><button class="btn amber" data-go="#/compare">Сравнить два варианта</button><button class="btn ghost" data-go="#/plan">К плану</button></div>
@@ -29,7 +58,10 @@ export function board(root, ctx) {
   bindGo(root);
 
   const boardEl = $('[data-board]', root);
+  const runwayEl = $('[data-runway]', root);
   const below = $('[data-below]', root);
+  const marquee = (r) => `DEPARTURES · ${r.summary.total} ВУЗА · ПОДХОДЯТ ${r.summary.fit} · БЛИЗКО ${r.summary.near} · НАЖМИ НА ТАЛОН, ЧТОБЫ УВИДЕТЬ ПОЧЕМУ · `;
+  const bindPlanes = () => $$('.plane', runwayEl).forEach((pl) => (pl.onclick = () => openDetail(run.results.find((r) => r.id === pl.dataset.plane), ctx, () => recompute('Изменил цель'))));
   const renderBelow = () => {
     const forks = whatIf(getProfile(), ctx.universities, ctx, ctx.cities);
     const fitOrNear = run.summary.fit + run.summary.near;
@@ -55,6 +87,9 @@ export function board(root, ctx) {
     const prev = run;
     run = ctx.compute(getProfile());
     updateBoard($('.board', boardEl), run.results, { foot: footHTML(run.summary) });
+    const mq = $('.marquee', boardEl); mq.textContent = marquee(run); mq.dataset.text = marquee(run);
+    updateRunway(runwayEl, run);
+    bindPlanes();
     renderBelow();
     const d = diffRuns(prev, run);
     if (d?.any) showDelta(d, why);
@@ -64,7 +99,9 @@ export function board(root, ctx) {
 
   // загрузка: табло «прогревается», строки перещёлкиваются из скелета
   setTimeout(() => {
-    boardEl.innerHTML = boardHTML(run.results, { foot: footHTML(run.summary) });
+    boardEl.innerHTML = boardHTML(run.results, { foot: footHTML(run.summary), marquee: marquee(run) });
+    runwayEl.innerHTML = runwayHTML(run);
+    bindPlanes();
     renderBelow();
     $$('.brow[data-id]', boardEl).forEach((row) => (row.onclick = () => openDetail(run.results.find((r) => r.id === row.dataset.id), ctx, () => recompute('Изменил цель'))));
   }, 650);
@@ -219,7 +256,7 @@ export function compare(root, ctx) {
   }).join('');
   const head = (r) => `<div class="cmp-head">${postcard(r.uni, { title: false })}<div><b class="display h3">${esc(r.uni.short)}</b><div class="row small" style="margin-top:4px">${statusChip(r.status)}</div></div></div>`;
   root.innerHTML = `<section class="cmp">
-    <div><span class="eyebrow">Этап 5 · Сравнение</span><h2 class="display h2">Два маршрута рядом</h2><p class="small muted">Строки — по тому, что ты отметил важным. Зелёная рамка — кто лучше по этой строке.</p></div>
+    <div><span class="eyebrow">Этап 5 · Сравнение</span><h2 class="display h2">Два маршрута рядом</h2><p class="small muted">Строки — по тому, что ты отметил важным. Зелёным закрашен тот, кто лучше по этой строке.</p></div>
     <div class="row"><span class="small muted">Заменить:</span>${pool.slice(0, 6).map((r) => `<button class="chip" data-swap="${r.id}" aria-pressed="${ids.includes(r.id)}">${esc(r.uni.short)}</button>`).join('')}</div>
     <div class="cmp-grid">${head(a)}${head(b)}</div>
     ${rows}

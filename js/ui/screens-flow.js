@@ -14,22 +14,36 @@ export function entry(root, ctx) {
   root.innerHTML = `<section class="hero">
     <div class="brandline"><span class="logo">AI<b>QYN</b></span><span class="eyebrow">айқын — «ясный» по-казахски</span></div>
     <h1 class="display h1">Куда поступать — <em>и почему именно туда</em></h1>
-    <p class="lead">Шесть вопросов — и вместо списка вузов ты получаешь табло: кто подходит, кто близко, и по какой причине. Поменяешь ответ — табло перестроится у тебя на глазах.</p>
+    <div class="flapword" aria-hidden="true"><span>Каждый вуз:</span><span class="w flap" data-flapword>ПОДХОДИТ</span></div>
+    <p class="lead">Шесть вопросов — и вместо списка вузов ты получаешь табло: кто подходит, кто близко, и по какой причине. Поменяешь ответ — талоны перещёлкнутся у тебя на глазах.</p>
     <div class="hero-board" aria-label="Пример табло">
-      ${boardHTML(run.results.slice(0, 5), { title: 'ПРИМЕР · IT · АЛМАТЫ', foot: `<span>это пример для профиля «IT, Алматы»; свой маршрут — ниже</span>` })}
+      ${boardHTML(run.results.slice(0, 4), { marquee: 'ПРИМЕР · IT · ЕНТ 96 · 1,8 МЛН ₸ · АЛМАТЫ · СВОЙ МАРШРУТ — НИЖЕ · ', foot: `<span>пример для профиля «IT, Алматы»: <b>${run.summary.fit}</b> подходят, <b>${run.summary.near}</b> близко из ${run.summary.total}</span>` })}
     </div>
     <ul class="promise">
-      <li><span class="n">1</span><span>Каждый вуз — с объяснением: балл собран из слагаемых, у отказа названа причина и разрыв.</span></li>
-      <li><span class="n">2</span><span>Честные данные: у каждой цифры — источник и дата проверки, либо пометка «демо».</span></li>
-      <li><span class="n">3</span><span>Без гарантий поступления: прошлогодний проходной — ориентир, а не обещание.</span></li>
+      <li class="numbered"><span class="n">01</span><span><b>С объяснением.</b> Балл собран из слагаемых, у отказа названа причина и разрыв.</span></li>
+      <li class="numbered"><span class="n">02</span><span><b>Честно.</b> У каждой цифры — источник и дата проверки, либо пометка «демо».</span></li>
+      <li class="numbered"><span class="n">03</span><span><b>Без гарантий.</b> Прошлогодний проходной — ориентир, а не обещание поступления.</span></li>
     </ul>
     <div class="cta">
-      <button class="btn amber" data-go="#/profile/1">${started ? 'Продолжить маршрут' : 'Построить мой маршрут'} <span class="muted">· 6 вопросов · 2 минуты</span></button>
+      <button class="btn amber" data-go="#/profile/1">${started ? 'Продолжить маршрут' : 'Построить мой маршрут'}</button><span class="small" style="color:var(--on-blue-2)">6 вопросов · 2 минуты</span>
       ${started ? '<button class="btn ghost" data-go="#/board">К табло</button>' : ''}
       <a class="link small" href="#/sources">Источники данных</a>
     </div>
   </section>`;
   bindGo(root);
+  // слово на табло перещёлкивается: подходит → близко → почему → …
+  const words = ['ПОДХОДИТ', 'БЛИЗКО', 'НЕ ПРОХОДИТ', 'И ПОЧЕМУ'];
+  const w = $('[data-flapword]', root);
+  let i = 0;
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) {
+    const timer = setInterval(() => {
+      if (!document.body.contains(w)) { clearInterval(timer); return; }
+      i = (i + 1) % words.length;
+      w.classList.remove('flipping'); void w.offsetWidth; w.classList.add('flipping');
+      setTimeout(() => { w.textContent = words[i]; }, 205);
+    }, 1900);
+  }
 }
 
 /* ---------- 2. Анкета ---------- */
@@ -193,15 +207,15 @@ export function diagnosis(root, ctx) {
   const fitOrNear = run.summary.fit + run.summary.near;
   root.innerHTML = `<section class="diag">
     <div class="head"><div><span class="eyebrow">Этап 3 · Диагностика</span><h2 class="display h2">Талон готов. Вот что он значит</h2></div><span class="stamp ${fitOrNear ? 'fit' : 'near'}">${fitOrNear ? 'к вылету' : 'ждём данных'}</span></div>
-    <div class="card"><span class="eyebrow">Цель</span><p class="lead" style="margin-top:6px">${esc(p.interests.map(directionLabel).join(', '))}${p.budget === 0 ? ' — на грант' : p.budget ? ` — до ${tengeShort(p.budget)} в год` : ''}${p.cities.length ? `, ${p.relocate ? 'лучше в ' : ''}${esc(p.cities.join(' / '))}` : ''}.</p></div>
+    <div class="block"><span class="eyebrow">Цель</span><p class="goal">${esc(p.interests.map(directionLabel).join(', '))}${p.budget === 0 ? ' — на грант' : p.budget ? ` — до ${tengeShort(p.budget)} в год` : ''}${p.cities.length ? `, ${p.relocate ? 'лучше в ' : ''}${esc(p.cities.join(' / '))}` : ''}</p></div>
     <div class="grid-2">
-      <div class="card"><span class="eyebrow">Сильные стороны</span>${strengths.length ? `<ul class="stack" style="margin-top:8px">${strengths.map((s) => `<li>✓ ${esc(s)}</li>`).join('')}</ul>` : '<p class="muted" style="margin-top:8px">Пока нечего выделить — добавь балл или бюджет.</p>'}</div>
-      <div class="card"><span class="eyebrow">Ограничения</span>${limits.length ? `<ul class="stack" style="margin-top:8px">${limits.map((s) => `<li>• ${esc(s)}</li>`).join('')}</ul>` : '<p class="muted" style="margin-top:8px">Жёстких ограничений нет.</p>'}</div>
+      <div class="block"><span class="eyebrow">Сильные стороны</span>${strengths.length ? `<ul class="stack">${strengths.map((s) => `<li>✓ ${esc(s)}</li>`).join('')}</ul>` : '<p class="muted">Пока нечего выделить — добавь балл или бюджет.</p>'}</div>
+      <div class="block"><span class="eyebrow">Ограничения</span>${limits.length ? `<ul class="stack">${limits.map((s) => `<li>• ${esc(s)}</li>`).join('')}</ul>` : '<p class="muted">Жёстких ограничений нет.</p>'}</div>
     </div>
-    ${missing.length ? `<div class="card hatched"><span class="eyebrow">Не хватает данных</span><ul class="stack" style="margin-top:8px">${missing.map((m) => `<li><b>${m.t}</b> — ${esc(m.e)}. <a class="link" href="#/profile/${m.t === 'Балл ЕНТ' ? 2 : 3}">Добавить</a></li>`).join('')}</ul></div>` : ''}
-    <div class="card"><span class="eyebrow">Как работает отбор</span>
-      <div class="funnelbars" style="margin-top:10px">${stages.map((s, i) => `<div class="fb ${s.cut ? 'cut' : ''}"><div class="lbl"><span>${esc(s.label)}${s.cut ? ` <span class="muted">· −${s.cut}</span>` : ''}</span><b>${s.n}</b></div><div class="bar"><i style="width:${(s.n / total) * 100}%"></i></div></div>`).join('')}</div>
-      <p class="small muted" style="margin-top:10px">Близкие варианты (разрыв небольшой) остаются в воронке — их мы покажем отдельно с указанием, чего не хватает.</p>
+    ${missing.length ? `<div class="missing"><span class="eyebrow">Не хватает данных</span><ul class="stack" style="margin-top:8px">${missing.map((m) => `<li><b>${m.t}</b> — ${esc(m.e)}. <a class="link" href="#/profile/${m.t === 'Балл ЕНТ' ? 2 : 3}">Добавить</a></li>`).join('')}</ul></div>` : ''}
+    <div class="block"><span class="eyebrow">Как работает отбор</span>
+      <div class="funnelbars" style="margin-top:6px">${stages.map((s, i) => `<div class="fb ${s.cut ? 'cut' : ''}"><div class="lbl"><span>${esc(s.label)}${s.cut ? ` <span class="muted">· −${s.cut}</span>` : ''}</span><b>${s.n}</b></div><div class="bar"><i style="width:${(s.n / total) * 100}%; animation-delay:${i * 120}ms"></i></div></div>`).join('')}</div>
+      <p class="small muted" style="margin-top:6px">Близкие варианты (разрыв небольшой) остаются в воронке — их мы покажем отдельно с указанием, чего не хватает.</p>
     </div>
     <div class="bottom-nav"><button class="btn amber" data-go="#/board">Открыть табло · ${unis(fitOrNear)}</button><button class="btn ghost" data-go="#/profile/6">Изменить ответы</button></div>
   </section>`;

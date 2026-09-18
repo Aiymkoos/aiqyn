@@ -48,7 +48,7 @@ export function legend(r) {
 
 export function funnel(r) {
   return `<div class="funnel">${r.filters.map((f) => {
-    const cls = f.pass === true ? 'pass' : f.pass === null ? 'skip' : f.severity === 'near' ? 'near' : 'fail';
+    const cls = f.pass === true ? 'ok' : f.pass === null ? 'skip' : f.severity === 'near' ? 'near' : 'fail';
     const m = f.pass === true ? '✓' : f.pass === null ? '?' : f.severity === 'near' ? '≈' : '✕';
     return `<div class="frow ${cls}"><span class="m">${m}</span><div><span class="k">${LABELS[f.key]}</span> · <span class="d">${esc(f.detail)}</span></div></div>`;
   }).join('')}</div>`;

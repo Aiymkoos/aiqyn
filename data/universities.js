@@ -6,7 +6,7 @@ import { fact, demo, unknown } from '../js/engine/facts.js';
 // tuition — минимальная стоимость года по направлению.
 export const UNIVERSITIES = [
   {
-    id: 'kaznu', code: 'ALA·KZNU', short: 'КазНУ им. аль-Фараби', name: 'Казахский национальный университет имени аль-Фараби',
+    id: 'kaznu', code: 'ALA·KZNU', short: 'КазНУ', name: 'Казахский национальный университет имени аль-Фараби',
     city: 'Алматы', type: 'national', website: 'https://farabi.university', postcard: 'almaty',
     languages: demo(['kz', 'ru', 'en'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -68,7 +68,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'enu', code: 'NQZ·ENU', short: 'ЕНУ им. Гумилёва', name: 'Евразийский национальный университет имени Л. Н. Гумилёва',
+    id: 'enu', code: 'NQZ·ENU', short: 'ЕНУ', name: 'Евразийский национальный университет имени Л. Н. Гумилёва',
     city: 'Астана', type: 'national', website: 'https://enu.kz', postcard: 'astana',
     languages: demo(['kz', 'ru', 'en'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -132,7 +132,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kargu', code: 'KGF·KARU', short: 'КарУ им. Букетова', name: 'Карагандинский университет имени академика Е. А. Букетова',
+    id: 'kargu', code: 'KGF·KARU', short: 'КарУ Букетова', name: 'Карагандинский университет имени академика Е. А. Букетова',
     city: 'Караганда', type: 'state', website: 'https://buketov.edu.kz', postcard: 'karaganda',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -163,7 +163,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kaznmu', code: 'ALA·KNMU', short: 'КазНМУ им. Асфендиярова', name: 'Казахский национальный медицинский университет имени С. Д. Асфендиярова',
+    id: 'kaznmu', code: 'ALA·KNMU', short: 'КазНМУ', name: 'Казахский национальный медицинский университет имени С. Д. Асфендиярова',
     city: 'Алматы', type: 'national', website: 'https://kaznmu.edu.kz', postcard: 'almaty',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -173,7 +173,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'sku', code: 'CIT·SKU', short: 'ЮКУ им. Ауэзова', name: 'Южно-Казахстанский университет имени М. Ауэзова',
+    id: 'sku', code: 'CIT·SKU', short: 'ЮКУ Ауэзова', name: 'Южно-Казахстанский университет имени М. Ауэзова',
     city: 'Шымкент', type: 'state', website: 'https://auezov.edu.kz', postcard: 'shymkent',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -244,7 +244,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kaznpu', code: 'ALA·KNPU', short: 'КазНПУ им. Абая', name: 'Казахский национальный педагогический университет имени Абая',
+    id: 'kaznpu', code: 'ALA·KNPU', short: 'КазНПУ', name: 'Казахский национальный педагогический университет имени Абая',
     city: 'Алматы', type: 'national', website: 'https://abaiuniversity.edu.kz', postcard: 'almaty',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -282,7 +282,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kazatu', code: 'NQZ·KATU', short: 'КазАТУ им. Сейфуллина', name: 'Казахский агротехнический исследовательский университет имени С. Сейфуллина',
+    id: 'kazatu', code: 'NQZ·KATU', short: 'КазАТУ', name: 'Казахский агротехнический исследовательский университет имени С. Сейфуллина',
     city: 'Астана', type: 'state', website: 'https://kazatu.edu.kz', postcard: 'astana',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -301,7 +301,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kartu', code: 'KGF·KTU', short: 'КарТУ им. Сагинова', name: 'Карагандинский технический университет имени Абылкаса Сагинова',
+    id: 'kartu', code: 'KGF·KTU', short: 'КарТУ', name: 'Карагандинский технический университет имени Абылкаса Сагинова',
     city: 'Караганда', type: 'state', website: 'https://kstu.kz', postcard: 'karaganda',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -352,7 +352,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'toraighyrov', code: 'PWQ·TOU', short: 'Торайгыров университет', name: 'Торайгыров университет (Павлодар)',
+    id: 'toraighyrov', code: 'PWQ·TOU', short: 'Торайгыров ун-т', name: 'Торайгыров университет (Павлодар)',
     city: 'Павлодар', type: 'state', website: 'https://tou.edu.kz', postcard: 'default',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -379,7 +379,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'vktu', code: 'UKK·EKTU', short: 'ВКТУ им. Серикбаева', name: 'Восточно-Казахстанский технический университет имени Д. Серикбаева',
+    id: 'vktu', code: 'UKK·EKTU', short: 'ВКТУ', name: 'Восточно-Казахстанский технический университет имени Д. Серикбаева',
     city: 'Усть-Каменогорск', type: 'state', website: 'https://ektu.kz', postcard: 'default',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -398,7 +398,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'kru', code: 'KSN·KRU', short: 'КРУ им. Байтурсынова', name: 'Костанайский региональный университет имени Ахмет Байтұрсынұлы',
+    id: 'kru', code: 'KSN·KRU', short: 'КРУ Байтурсынова', name: 'Костанайский региональный университет имени Ахмет Байтұрсынұлы',
     city: 'Костанай', type: 'state', website: 'https://kru.edu.kz', postcard: 'default',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [
@@ -425,7 +425,7 @@ export const UNIVERSITIES = [
     ],
   },
   {
-    id: 'argu', code: 'AKX·ARU', short: 'АРУ им. Жубанова', name: 'Актюбинский региональный университет имени К. Жубанова',
+    id: 'argu', code: 'AKX·ARU', short: 'АРУ Жубанова', name: 'Актюбинский региональный университет имени К. Жубанова',
     city: 'Актобе', type: 'state', website: 'https://aru.edu.kz', postcard: 'default',
     languages: demo(['kz', 'ru'], 'языки обучения по общедоступным сведениям, не проверены на сайте вуза'), dorm: demo(true, 'не проверено на сайте вуза'),
     programs: [

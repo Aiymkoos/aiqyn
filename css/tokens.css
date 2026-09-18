@@ -1,35 +1,45 @@
 :root {
-  /* бумага и чернила */
-  --paper: #F6F1E7;
-  --paper-2: #EDE6D8;
-  --paper-3: #E3DBC9;
-  --ink: #12172A;
-  --ink-2: #3A4157;
-  --ink-3: #6C7386;
-  --line: #D8CFBC;
+  /* кобальт и сигнальный жёлтый — как указатели в аэропорту */
+  --blue: #1E3DFF;
+  --blue-deep: #0B1FA8;
+  --blue-dark: #070E4A;
+  --yellow: #FFE600;
+  --yellow-2: #FFF176;
+  --coral: #FF4F3F;
+  --mint: #39F5A4;
+  --ink: #0A0B1E;
+  --ink-2: #2A2C4A;
+  --ink-3: #6A6D8C;
   --white: #FFFFFF;
+  --paper: #FFFFFF;
+  --paper-2: #EEF0FF;
+  --paper-3: #D9DDFF;
+  --line: #C9CEFF;
+  --on-blue: #FFFFFF;
+  --on-blue-2: rgba(255, 255, 255, 0.72);
+  --on-blue-3: rgba(255, 255, 255, 0.46);
+  --on-blue-line: rgba(255, 255, 255, 0.22);
 
   /* табло */
-  --board: #0F1217;
-  --board-2: #181D25;
-  --board-3: #232A35;
-  --board-line: #2C3441;
-  --board-text: #F4ECD6;
-  --board-dim: #8E96A6;
-  --amber: #F5B324;
-  --amber-2: #FFD166;
-  --amber-ink: #7A4E00;
+  --board: #0A0B14;
+  --board-2: #15172A;
+  --board-line: #2A2D4A;
+  --board-text: #F5F1E0;
+  --board-dim: #8A8FB0;
+  --amber: #FFE600;
+  --amber-2: #FFF176;
+  --amber-ink: #5C4A00;
 
   /* статусы: цвет никогда не единственный носитель смысла — рядом всегда знак и слово */
-  --fit: #1E8A4E;  --fit-bg: #DCF3E4;  --fit-board: #5BE08A;
-  --near: #B86E00; --near-bg: #FCEBC7; --near-board: #F5B324;
-  --insuf: #6C7386; --insuf-bg: #E8E4DA; --insuf-board: #A9B0BE;
-  --out: #8A8F9B;  --out-bg: #ECEAE4;  --out-board: #6C7386;
+  --fit: #0E8A55;  --fit-bg: #C9FFE4;  --fit-board: #39F5A4;
+  --near: #7A5A00; --near-bg: #FFF3A6; --near-board: #FFE600;
+  --insuf: #4A4E6E; --insuf-bg: #E6E8F5; --insuf-board: #8A8FB0;
+  --out: #7C7F99;  --out-bg: #ECEDF4;  --out-board: #5A5E7C;
 
-  --radius: 16px;
-  --radius-s: 10px;
-  --shadow: 0 10px 30px rgba(18, 23, 42, 0.12), 0 2px 6px rgba(18, 23, 42, 0.06);
-  --shadow-s: 0 2px 8px rgba(18, 23, 42, 0.08);
+  --radius: 4px;
+  --radius-s: 3px;
+  --shadow: 0 14px 34px rgba(7, 14, 74, 0.35), 0 2px 6px rgba(7, 14, 74, 0.25);
+  --shadow-s: 0 4px 12px rgba(7, 14, 74, 0.25);
 
   --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
   --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -37,8 +47,8 @@
 
   --gutter: 16px;
   --maxw: 1080px;
-  --pass-h: 0px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur: 320ms;
 }
 
