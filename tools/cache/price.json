@@ -1,0 +1,678 @@
+{
+"kaznu": {
+"url": "/univ/50-kazahskiy-natsionalnyy-universitet-imeni-al-farabi/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01401",
+"n": "Физическая культура и спорт",
+"p": 1100000
+},
+"humanities": {
+"c": "6B02201",
+"n": "",
+"p": 1100000
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 1400000
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 1700000
+},
+"science": {
+"c": "6B05201",
+"n": "Геоэкология",
+"p": 1100000
+},
+"it": {
+"c": "6B06105",
+"n": "",
+"p": 1100000
+},
+"engineering": {
+"c": "6B07102",
+"n": "",
+"p": 1100000
+},
+"architecture": {
+"c": "6B07301",
+"n": "",
+"p": 1100000
+},
+"medicine": {
+"c": "6B10107",
+"n": "Общественное здравоохранение",
+"p": 500000
+}
+}
+},
+"kbtu": {
+"url": "/univ/63-kazahstansko-britanskiy-tehnicheskiy-universitet/price",
+"h2": [
+"2025 год"
+],
+"best": {}
+},
+"satbayev": {
+"url": "/univ/47-kazahskiy-natsionalnyy-issledovatelskiy-tehnicheskiy-universitet-imeni-k-i-satpaeva/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"business": {
+"c": "6B04103",
+"n": "",
+"p": 905760
+},
+"it": {
+"c": "6B06102",
+"n": "",
+"p": 1278060
+},
+"engineering": {
+"c": "6B07101",
+"n": "",
+"p": 1111380
+}
+}
+},
+"enu": {
+"url": "/univ/23-evraziyskiy-natsionalnyy-universitet-im-l-n-gumileva/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01103",
+"n": "",
+"p": 1350000
+},
+"design": {
+"c": "6B02120",
+"n": "",
+"p": 1500000
+},
+"humanities": {
+"c": "6B03204",
+"n": "",
+"p": 1450000
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 1550000
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 1550000
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 1450000
+},
+"it": {
+"c": "6B06103",
+"n": "",
+"p": 1600000
+},
+"engineering": {
+"c": "6B07102",
+"n": "",
+"p": 1470000
+},
+"architecture": {
+"c": "6B07311",
+"n": "",
+"p": 1470000
+}
+}
+},
+"aitu": {
+"url": "/univ/119-astana-it-university/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"humanities": {
+"c": "6B03201",
+"n": "Цифровая журналистика",
+"p": 2500000
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 2500000
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 2500000
+},
+"engineering": {
+"c": "6B07101",
+"n": "Промышленный Интернет Вещей",
+"p": 2500000
+}
+}
+},
+"sdu": {
+"url": "/univ/104-universitet-imeni-suleymana-demirelya/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01301",
+"n": "Педагогика и методика начального обучения",
+"p": 1080000
+},
+"humanities": {
+"c": "6B02304",
+"n": "",
+"p": 1200000
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 2220000
+},
+"law": {
+"c": "6B04203",
+"n": "Право государственного управления",
+"p": 1380000
+},
+"science": {
+"c": "6B05401",
+"n": "",
+"p": 1320000
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 1860000
+}
+}
+},
+"kargu": {
+"url": "/univ/69-karagandinskiy-gosudarstvennyy-universitet-imeni-akademika-e-buketova/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01102",
+"n": "Педагогика дополнительного образования",
+"p": 769200
+},
+"design": {
+"c": "6B02101",
+"n": "",
+"p": 769200
+},
+"humanities": {
+"c": "6B02202",
+"n": "",
+"p": 769200
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 769200
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 769200
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 769200
+},
+"it": {
+"c": "6B06102",
+"n": "",
+"p": 769200
+},
+"engineering": {
+"c": "6B07103",
+"n": "",
+"p": 769200
+}
+}
+},
+"kaznmu": {
+"url": "/univ/48-kazahskiy-natsionalnyy-meditsinskiy-universitet-imeni-s-d-asfendiyarova/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 905800
+},
+"medicine": {
+"c": "6B10101",
+"n": "",
+"p": 1230700
+}
+}
+},
+"sku": {
+"url": "/univ/114-yuzhno-kazahstanskiy-gosudarstvennyy-universitet-imeni-m-auezova/price",
+"h2": [
+"год не указан"
+],
+"best": {
+"education": {
+"c": "6B01101",
+"n": "",
+"p": 757000
+},
+"design": {
+"c": "6B02120",
+"n": "",
+"p": 757000
+},
+"humanities": {
+"c": "6B02210",
+"n": "",
+"p": 757000
+},
+"business": {
+"c": "6B04110",
+"n": "",
+"p": 757000
+},
+"law": {
+"c": "6B04210",
+"n": "",
+"p": 757000
+},
+"science": {
+"c": "6B05110",
+"n": "",
+"p": 757000
+},
+"it": {
+"c": "6B06110",
+"n": "Информатика",
+"p": 757000
+},
+"engineering": {
+"c": "6B07101",
+"n": "",
+"p": 757000
+},
+"architecture": {
+"c": "6B07310",
+"n": "",
+"p": 757000
+}
+}
+},
+"kimep": {
+"url": "/univ/99-universitet-kimep/price",
+"h2": [
+"2025 год"
+],
+"best": {}
+},
+"almau": {
+"url": "/univ/10-almaty-menedzhment-universitet/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"design": {
+"c": "6B02104",
+"n": "Acting for film",
+"p": 2600000
+},
+"humanities": {
+"c": "6B03201",
+"n": "",
+"p": 2600000
+},
+"business": {
+"c": "6B04194",
+"n": "",
+"p": 2600000
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 2900000
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 2900000
+}
+}
+},
+"iitu": {
+"url": "/univ/85-mezhdunarodnyy-universitet-informatsionnyh-tehnologiy/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"humanities": {
+"c": "6B03201",
+"n": "",
+"p": 1248000
+},
+"business": {
+"c": "6B04102",
+"n": "",
+"p": 1410000
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 1410000
+}
+}
+},
+"kaznpu": {
+"url": "/univ/55-kazahskiy-natsionalnyy-pedagogicheskiy-universitet-imeni-abaya/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01101",
+"n": "",
+"p": 900000
+},
+"design": {
+"c": "6B02109",
+"n": "",
+"p": 1130000
+},
+"humanities": {
+"c": "6B02201",
+"n": "",
+"p": 1130000
+},
+"business": {
+"c": "6B04101",
+"n": "Экономика",
+"p": 950000
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 950000
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 950000
+},
+"it": {
+"c": "6B06102",
+"n": "Информационные системы",
+"p": 950000
+}
+}
+},
+"mua": {
+"url": "/univ/81-meditsinskiy-universitet-astana/price",
+"h2": [
+"2024 год"
+],
+"best": {}
+},
+"kazatu": {
+"url": "/univ/41-kazahskiy-agrotehnicheskiy-universitet-imeni-s-seyfullina/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"business": {
+"c": "6B04102",
+"n": "",
+"p": 847000
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 847000
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 907500
+},
+"engineering": {
+"c": "6B07104",
+"n": "",
+"p": 847000
+},
+"architecture": {
+"c": "6B07301",
+"n": "",
+"p": 1028500
+}
+}
+},
+"kartu": {
+"url": "/univ/68-karagandinskiy-gosudarstvennyy-tehnicheskiy-universitet/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"design": {
+"c": "6B02101",
+"n": "Дизайн",
+"p": 588500
+},
+"business": {
+"c": "6B04101",
+"n": "Экономика",
+"p": 588500
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 697500
+},
+"it": {
+"c": "6B06102",
+"n": "",
+"p": 715000
+},
+"engineering": {
+"c": "6B07102",
+"n": "",
+"p": 697500
+},
+"architecture": {
+"c": "6B07301",
+"n": "",
+"p": 697500
+}
+}
+},
+"narxoz": {
+"url": "/univ/107-universitet-narhoz/price",
+"h2": [
+"2024 год"
+],
+"best": {}
+},
+"turan": {
+"url": "/univ/102-universitet-turan/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"design": {
+"c": "6B02101",
+"n": "Режиссура",
+"p": 1284000
+},
+"humanities": {
+"c": "6B02301",
+"n": "",
+"p": 1284000
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 1284000
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 1284000
+},
+"it": {
+"c": "6B06101",
+"n": "Информационные системы",
+"p": 1284000
+}
+}
+},
+"toraighyrov": {
+"url": "/univ/88-pavlodarskiy-gosudarstvennyy-universitet-imeni-s-toraygyrova/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"design": {
+"c": "6B02101",
+"n": "",
+"p": 624800
+},
+"humanities": {
+"c": "6B03201",
+"n": "",
+"p": 596200
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 596200
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 596200
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 601700
+},
+"it": {
+"c": "6B06102",
+"n": "",
+"p": 601700
+},
+"engineering": {
+"c": "6B07101",
+"n": "Автоматизация и управление",
+"p": 601700
+},
+"architecture": {
+"c": "6B07301",
+"n": "",
+"p": 601700
+}
+}
+},
+"vktu": {
+"url": "/univ/15-vostochno-kazahstanskiy-gosudarstvennyy-tehnicheskiy-universitet-imeni-d-serikbaeva/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 609840
+},
+"science": {
+"c": "6B05301",
+"n": "",
+"p": 762300
+},
+"it": {
+"c": "6B06101",
+"n": "",
+"p": 805860
+},
+"engineering": {
+"c": "6B07101",
+"n": "",
+"p": 805860
+},
+"architecture": {
+"c": "6B07301",
+"n": "",
+"p": 805860
+}
+}
+},
+"kru": {
+"url": "/univ/76-kostanayskiy-gosudarstvennyy-universitet-imeni-a-baytursynova/price",
+"h2": [
+"2025 год"
+],
+"best": {
+"education": {
+"c": "6B01101",
+"n": "",
+"p": 535200
+},
+"humanities": {
+"c": "6B02201",
+"n": "",
+"p": 535200
+},
+"business": {
+"c": "6B04101",
+"n": "",
+"p": 535200
+},
+"law": {
+"c": "6B04201",
+"n": "",
+"p": 535200
+},
+"science": {
+"c": "6B05101",
+"n": "",
+"p": 535200
+},
+"it": {
+"c": "6B06102",
+"n": "",
+"p": 535200
+},
+"engineering": {
+"c": "6B07101",
+"n": "",
+"p": 535200
+}
+}
+},
+"argu": {
+"url": "/univ/5-aktyubinskiy-gosudarstvennyy-regionalnyy-universitet-imeni-k-zhubanova/price",
+"h2": [
+"2024 год"
+],
+"best": {}
+}
+}
