@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <title>Aiqyn — презентация</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
   @page { size: 1280px 720px; margin: 0; }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { font-family: 'Manrope', system-ui, sans-serif; color: #1C1B3A; background: #F6F4FF; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: 'Nunito', system-ui, sans-serif; color: #1C1B3A; background: #F6F4FF; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; padding: 64px 72px; background: radial-gradient(900px 600px at -10% -20%, #DDD6FF 0%, transparent 60%), radial-gradient(800px 600px at 110% 120%, #FFE1D6 0%, transparent 60%), #F6F4FF; page-break-after: always; break-after: page; display: grid; align-content: start; gap: 22px; }
   .slide.dark { background: #2A2757; color: #fff; }
   .slide.yellow { background: linear-gradient(135deg, #6A5AE0 0%, #9B6BFF 60%, #FF7A59 140%); color: #fff; }
-  .d { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; line-height: 0.92; letter-spacing: 0.005em; }
-  .h1 { font-size: 110px; }
-  .h2 { font-size: 64px; }
-  .h3 { font-size: 34px; }
+  .d { font-family: 'Nunito', sans-serif; font-weight: 900; text-transform: none; line-height: 1.05; letter-spacing: -0.015em; }
+  .h1 { font-size: 78px; }
+  .h2 { font-size: 50px; }
+  .h3 { font-size: 30px; }
   .mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; }
   .eyebrow { color: #6A5AE0; }
   .yellow .eyebrow { color: rgba(255,255,255,0.8); }
@@ -25,51 +25,51 @@
   .yellow .lead { color: rgba(255,255,255,0.9); } .dark .lead, .dark p { color: rgba(255,255,255,0.85); }
   .num { position: absolute; right: 72px; bottom: 44px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.2em; color: #7B7A9E; }
   .yellow .num, .dark .num { color: rgba(255,255,255,0.6); }
-  .brand { position: absolute; left: 72px; bottom: 40px; font-family: 'Barlow Condensed'; font-weight: 700; font-size: 22px; letter-spacing: 0.14em; }
+  .brand { position: absolute; left: 72px; bottom: 40px; font-family: 'Nunito'; font-weight: 700; font-size: 22px; letter-spacing: 0.14em; }
   .brand b { color: #6A5AE0; } .yellow .brand b, .dark .brand b { color: #FFC857; }
   .em { background: linear-gradient(135deg, #6A5AE0, #9B6BFF 55%, #FF7A59 130%); -webkit-background-clip: text; background-clip: text; color: transparent; } .yellow .em { color: #FFC857; -webkit-text-fill-color: #FFC857; }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
   .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
   ul { padding-left: 0; list-style: none; display: grid; gap: 12px; margin: 0; }
   li.n { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; }
-  li.n .k { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 44px; line-height: 0.9; color: #6A5AE0; } .dark li.n .k { color: #FFC857; }
+  li.n .k { font-family: 'Nunito'; font-weight: 700; font-size: 44px; line-height: 0.9; color: #6A5AE0; } .dark li.n .k { color: #FFC857; }
   .yellow li.n .k { color: #FFC857; }
   .stat { display: grid; gap: 4px; }
-  .stat .v { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 84px; line-height: 0.9; color: #6A5AE0; }
+  .stat .v { font-family: 'Nunito'; font-weight: 700; font-size: 84px; line-height: 0.9; color: #6A5AE0; }
   .stat .l { font-size: 18px; color: #45446A; }
   .yellow .stat .v { color: #fff; } .yellow .stat .l { color: rgba(255,255,255,0.85); }
   /* талон */
   .ticket { --stub: 120px; display: grid; grid-template-columns: 1fr var(--stub); background: #fff; color: #1C1B3A; border-radius: 18px; box-shadow: 0 24px 48px -16px rgba(76,63,196,0.35); -webkit-mask: radial-gradient(circle at calc(100% - var(--stub)) 0, transparent 12px, #000 12.5px), radial-gradient(circle at calc(100% - var(--stub)) 100%, transparent 12px, #000 12.5px); -webkit-mask-composite: source-in; }
   .ticket .m { padding: 18px 22px; border-right: 3px dashed #C9CEFF; display: grid; gap: 8px; }
   .ticket .code { font-family: 'JetBrains Mono'; font-size: 13px; color: #4B3FC4; background: #E9E5FF; padding: 3px 8px; border-radius: 4px; justify-self: start; font-weight: 700; }
-  .ticket .name { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 34px; text-transform: uppercase; line-height: 1; }
+  .ticket .name { font-family: 'Nunito'; font-weight: 700; font-size: 34px; line-height: 1.1; }
   .ticket .meta { font-family: 'JetBrains Mono'; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #6A6D8C; }
-  .ticket .st { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 10px; border-radius: 4px; justify-self: start; }
+  .ticket .st { font-family: 'Nunito'; font-weight: 700; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 10px; border-radius: 4px; justify-self: start; }
   .st.fit { background: #D3F7EA; color: #0E8A5F; } .st.near { background: #FFF1CC; color: #8A5B00; } .st.out { background: #F1F0F8; color: #9796B0; }
   .ticket .s { display: grid; place-items: center; text-align: center; }
   .ticket.fit .s { background: linear-gradient(160deg, #B7F5DF, #2ED3A5); } .ticket.near .s { background: linear-gradient(160deg, #FFE9AE, #FFC857); } .ticket.out .s { background: #F1F0F8; }
-  .ticket .sc { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 56px; line-height: 1; }
+  .ticket .sc { font-family: 'Nunito'; font-weight: 700; font-size: 56px; line-height: 1; }
   .ticket .s small { display: block; font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10,11,30,0.6); margin-top: 4px; }
   .pass { background: #fff; color: #1C1B3A; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 48px -16px rgba(76,63,196,0.35); }
-  .pass .top { background: linear-gradient(135deg, #6A5AE0, #9B6BFF 55%, #FF7A59 130%); color: #fff; padding: 10px 16px; font-family: 'Barlow Condensed'; font-weight: 700; font-size: 22px; letter-spacing: 0.12em; display: flex; justify-content: space-between; }
+  .pass .top { background: linear-gradient(135deg, #6A5AE0, #9B6BFF 55%, #FF7A59 130%); color: #fff; padding: 10px 16px; font-family: 'Nunito'; font-weight: 700; font-size: 22px; letter-spacing: 0.12em; display: flex; justify-content: space-between; }
   .pass .top span:last-child { font-family: 'JetBrains Mono'; font-size: 12px; color: rgba(255,255,255,0.85); align-self: center; }
   .pass .f { display: grid; grid-template-columns: repeat(3, 1fr); }
   .pass .f div { padding: 10px 14px; border-right: 2px dashed #E4E1F5; border-bottom: 2px dashed #E4E1F5; }
   .pass .f div:nth-child(3n) { border-right: 0; } .pass .f div:nth-child(n+4) { border-bottom: 0; }
   .pass .k { font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7B7A9E; font-weight: 700; }
-  .pass .v { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 22px; white-space: nowrap; text-transform: uppercase; line-height: 1.1; color: #4B3FC4; }
+  .pass .v { font-family: 'Nunito'; font-weight: 700; font-size: 22px; white-space: nowrap; text-transform: uppercase; line-height: 1.1; color: #4B3FC4; }
   .toast { background: #2A2757; padding: 16px 20px; border-radius: 18px; box-shadow: 0 24px 48px -16px rgba(42,39,87,0.5); }
-  .toast .t { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 26px; letter-spacing: 0.1em; color: #FFC857; text-transform: uppercase; }
+  .toast .t { font-family: 'Nunito'; font-weight: 700; font-size: 26px; letter-spacing: 0.1em; color: #FFC857; text-transform: uppercase; }
   .toast p { font-size: 18px; margin: 6px 0 0; color: #F5F1E0; }
   .toast .up { color: #2ED3A5; } .toast .down { color: #FFDD8A; }
   .chip { display: inline-block; font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 4px; }
   .chip.fact { background: #D3F7EA; color: #0E8A5F; } .chip.demo { background: #FFF1CC; color: #8A5B00; } .chip.unk { background: #ECEAF6; color: #6B6A8C; }
   .grid-chips { display: flex; gap: 10px; flex-wrap: wrap; }
-  .quote { font-family: 'Barlow Condensed'; font-size: 44px; font-weight: 600; line-height: 1; text-transform: uppercase; color: #1C1B3A; max-width: 1000px; }
+  .quote { font-family: 'Nunito'; font-size: 44px; font-weight: 600; line-height: 1; text-transform: uppercase; color: #1C1B3A; max-width: 1000px; }
   .flow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: start; }
   .flow div { display: grid; gap: 8px; }
   .flow .dot { width: 34px; height: 34px; border-radius: 50%; background: #fff; color: #4B3FC4; display: grid; place-items: center; font-family: 'JetBrains Mono'; font-weight: 700; font-size: 14px; }
-  .flow .t { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 24px; text-transform: uppercase; line-height: 1; }
+  .flow .t { font-family: 'Nunito'; font-weight: 700; font-size: 24px; line-height: 1.1; }
   .flow .s { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.3; }
   .rule { height: 3px; background: repeating-linear-gradient(90deg, #C9C3F0 0 10px, transparent 10px 18px); }
   .yellow .rule { background: repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0 10px, transparent 10px 18px); }
