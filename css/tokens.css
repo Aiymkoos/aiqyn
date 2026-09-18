@@ -1,45 +1,60 @@
 :root {
-  /* кобальт и сигнальный жёлтый — как указатели в аэропорту */
-  --blue: #1E3DFF;
-  --blue-deep: #0B1FA8;
-  --blue-dark: #070E4A;
-  --yellow: #FFE600;
-  --yellow-2: #FFF176;
-  --coral: #FF4F3F;
-  --mint: #39F5A4;
-  --ink: #0A0B1E;
-  --ink-2: #2A2C4A;
-  --ink-3: #6A6D8C;
+  /* мягкая лаванда + фиолетовый, коралл, мята, солнце */
+  --bg: #F6F4FF;
+  --bg-2: #EEEBFF;
+  --ink: #1C1B3A;
+  --ink-2: #45446A;
+  --ink-3: #7B7A9E;
+  --line: #E4E1F5;
   --white: #FFFFFF;
   --paper: #FFFFFF;
-  --paper-2: #EEF0FF;
-  --paper-3: #D9DDFF;
-  --line: #C9CEFF;
-  --on-blue: #FFFFFF;
-  --on-blue-2: rgba(255, 255, 255, 0.72);
-  --on-blue-3: rgba(255, 255, 255, 0.46);
-  --on-blue-line: rgba(255, 255, 255, 0.22);
+  --paper-2: #F3F1FD;
+  --paper-3: #E6E2FA;
+
+  --violet: #6A5AE0;
+  --violet-2: #8B7CF6;
+  --violet-deep: #4B3FC4;
+  --violet-soft: #E9E5FF;
+  --coral: #FF7A59;
+  --coral-soft: #FFE4DB;
+  --sun: #FFC857;
+  --sun-soft: #FFF1CC;
+  --mint: #2ED3A5;
+  --mint-soft: #D3F7EA;
+  --sky: #5EC2FF;
+
+  /* текст на цветных поверхностях */
+  --on-blue: var(--ink);
+  --on-blue-2: var(--ink-2);
+  --on-blue-3: var(--ink-3);
+  --on-blue-line: var(--line);
 
   /* табло */
-  --board: #0A0B14;
-  --board-2: #15172A;
-  --board-line: #2A2D4A;
-  --board-text: #F5F1E0;
-  --board-dim: #8A8FB0;
-  --amber: #FFE600;
-  --amber-2: #FFF176;
-  --amber-ink: #5C4A00;
+  --board: #2A2757;
+  --board-2: #363374;
+  --board-line: #4A479A;
+  --board-text: #FFFFFF;
+  --board-dim: #B8B5E4;
+  --amber: var(--sun);
+  --amber-2: #FFDD8A;
+  --amber-ink: #7A4E00;
+  --yellow: var(--sun);
+  --yellow-2: var(--amber-2);
+  --blue: var(--violet);
 
   /* статусы: цвет никогда не единственный носитель смысла — рядом всегда знак и слово */
-  --fit: #0E8A55;  --fit-bg: #C9FFE4;  --fit-board: #39F5A4;
-  --near: #7A5A00; --near-bg: #FFF3A6; --near-board: #FFE600;
-  --insuf: #4A4E6E; --insuf-bg: #E6E8F5; --insuf-board: #8A8FB0;
-  --out: #7C7F99;  --out-bg: #ECEDF4;  --out-board: #5A5E7C;
+  --fit: #0E8A5F;  --fit-bg: #D3F7EA;  --fit-board: #2ED3A5;
+  --near: #8A5B00; --near-bg: #FFF1CC; --near-board: #FFC857;
+  --insuf: #6B6A8C; --insuf-bg: #ECEAF6; --insuf-board: #B8B5E4;
+  --out: #9796B0;  --out-bg: #F1F0F8;  --out-board: #6B6A8C;
 
-  --radius: 4px;
-  --radius-s: 3px;
-  --shadow: 0 14px 34px rgba(7, 14, 74, 0.35), 0 2px 6px rgba(7, 14, 74, 0.25);
-  --shadow-s: 0 4px 12px rgba(7, 14, 74, 0.25);
+  --radius: 22px;
+  --radius-s: 14px;
+  --shadow: 0 26px 50px -14px rgba(76, 63, 196, 0.28), 0 6px 16px rgba(28, 27, 58, 0.06);
+  --shadow-s: 0 12px 28px -10px rgba(76, 63, 196, 0.22), 0 2px 8px rgba(28, 27, 58, 0.05);
+  --shadow-l: 0 40px 80px -20px rgba(76, 63, 196, 0.35), 0 10px 24px rgba(28, 27, 58, 0.08);
+  --grad: linear-gradient(135deg, #6A5AE0 0%, #9B6BFF 55%, #FF7A59 130%);
+  --grad-soft: linear-gradient(135deg, #EDE9FF, #FFE9E2);
 
   --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
   --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -49,7 +64,8 @@
   --maxw: 1080px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --dur: 320ms;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur: 360ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
