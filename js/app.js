@@ -2,18 +2,17 @@
 import { load, getProfile, update, decodeProfile, subscribe } from './state.js';
 import { evaluateAll } from './engine/score.js';
 import { UNIVERSITIES } from '../data/universities.js';
-import { GRANTS } from '../data/grants.js';
 import { DIRECTIONS, CITIES, LANGS, directionLabel } from '../data/directions.js';
-import { CALENDAR, ENT_PROFILE, ENT_COMMON } from '../data/calendar.js';
+import { CALENDAR, ENT_PROFILE, ENT_COMMON, THRESHOLDS } from '../data/calendar.js';
 import { renderPass } from './ui/pass.js';
 import { closeSheet, $ } from './ui/bits.js';
 import * as flow from './ui/screens-flow.js';
 import * as res from './ui/screens-results.js';
 
 const ctx = {
-  grants: GRANTS, directionLabel, universities: UNIVERSITIES, directions: DIRECTIONS, cities: CITIES, langs: LANGS,
-  calendar: CALENDAR, entProfile: ENT_PROFILE, entCommon: ENT_COMMON,
-  compute: (p) => evaluateAll(p, UNIVERSITIES, { grants: GRANTS, directionLabel }),
+  directionLabel, universities: UNIVERSITIES, directions: DIRECTIONS, cities: CITIES, langs: LANGS,
+  calendar: CALENDAR, entProfile: ENT_PROFILE, entCommon: ENT_COMMON, thresholds: THRESHOLDS,
+  compute: (p) => evaluateAll(p, UNIVERSITIES, { directionLabel }),
   renderPass: () => {},
 };
 

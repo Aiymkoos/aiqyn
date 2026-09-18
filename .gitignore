@@ -22,3 +22,6 @@ Thumbs.db
 
 # logs
 *.log
+
+# скачанные сторонние PDF (прайсы вузов) — не публикуем
+tools/cache/*.pdf
