@@ -50,6 +50,7 @@ export function board(root, ctx) {
     <div class="top"><div><span class="eyebrow">Этап 4 · Рекомендации</span><h2 class="display h2">Табло вылетов</h2></div>
       <p class="small">Маркеры на полосе — вузы по баллу. Талон открывается по нажатию: из чего собран балл и где источник каждой цифры.</p></div>
     <div data-runway>${runwayHTML({ fit: [], near: [] })}</div>
+    <div data-above></div>
     <div data-board>${boardHTML([], { skeleton: true })}</div>
     <div data-below></div>
     <div class="bottom-nav"><button class="btn amber" data-go="#/compare">Сравнить два варианта</button><button class="btn ghost" data-go="#/plan">К плану</button></div>
@@ -60,6 +61,7 @@ export function board(root, ctx) {
   const boardEl = $('[data-board]', root);
   const runwayEl = $('[data-runway]', root);
   const below = $('[data-below]', root);
+  const above = $('[data-above]', root);
   const marquee = (r) => `DEPARTURES · ${r.summary.total} ВУЗА · ПОДХОДЯТ ${r.summary.fit} · БЛИЗКО ${r.summary.near} · НАЖМИ НА ТАЛОН, ЧТОБЫ УВИДЕТЬ ПОЧЕМУ · `;
   const bindPlanes = () => $$('.plane', runwayEl).forEach((pl) => (pl.onclick = () => openDetail(run.results.find((r) => r.id === pl.dataset.plane), ctx, () => recompute('Изменил цель'))));
   const renderBelow = () => {
@@ -67,13 +69,22 @@ export function board(root, ctx) {
     const fitOrNear = run.summary.fit + run.summary.near;
     let html = '';
     if (run.summary.fit === 0) {
-      html += `<div class="card empty"><h3 class="display h3">${run.summary.near ? 'Точных совпадений нет, но есть близкие' : 'Ничего не подошло'}</h3><p class="muted">${run.summary.near ? 'У близких вариантов указано, чего именно не хватает. Ниже — что открыло бы больше вузов.' : 'Это честный результат, а не ошибка. Ниже — какое одно изменение открыло бы вузы.'}</p></div>`;
+      const pr = getProfile();
+      const hints = [];
+      if (pr.ent == null) hints.push('добавь балл ЕНТ — без него мы не проверяем пороги и шансы на грант');
+      if (pr.budget == null) hints.push('укажи бюджет или «только грант»');
+      if (pr.ent == null && pr.budget === 0) hints.push('при «только грант» балл обязателен: сравнивать с прошлогодним проходным нечего');
+      const tail = forks.length ? 'Ниже — какое одно изменение открыло бы вузы.' : hints.length ? `Что поможет: ${hints.join('; ')}. Всё это можно поменять в пульте.` : 'Попробуй расширить города или языки в пульте.';
+      html += `<div class="card empty"><h3 class="display h3">${run.summary.near ? 'Точных совпадений нет, но есть близкие' : 'Ничего не подошло'}</h3><p class="muted">${run.summary.near ? `У близких вариантов указано, чего именно не хватает. ${tail}` : `Это честный результат, а не ошибка. ${tail}`}</p></div>`;
     } else if (run.summary.fit < 3) {
       html += `<p class="small muted">Подходящих меньше трёх — добавили близкие варианты с указанием, чего не хватает.</p>`;
     }
     if (forks.length) html += `<div><span class="eyebrow">Развилки · что если</span><div class="forks" style="margin-top:8px">${forks.map((f) => `<button class="fork" data-fork="${f.key}"><span>${esc(f.label)}</span><span class="g">+${unis(f.gain)} →</span></button>`).join('')}</div></div>`;
-    below.innerHTML = html;
-    $$('[data-fork]', below).forEach((b) => (b.onclick = () => {
+    // если подходящих нет — объяснение и развилки показываем над списком, а не после 22 талонов «мимо»
+    const target = run.summary.fit === 0 ? above : below;
+    (target === above ? below : above).innerHTML = '';
+    target.innerHTML = html;
+    $$('[data-fork]', target).forEach((b) => (b.onclick = () => {
       const f = forks.find((x) => x.key === b.dataset.fork);
       if (!f) return;
       const answered = { ...getProfile().answered };
