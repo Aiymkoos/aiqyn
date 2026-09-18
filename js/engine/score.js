@@ -74,7 +74,9 @@ export function evaluate(profile, uni, ctx) {
   }
 
   // 3. Порог ЕНТ — у вуза он свой по каждой группе программ; берём самый низкий среди твоих направлений
-  const ent = profile.ent ?? null;
+  // profile.ent может прийти испорченным (строка/объект/NaN — например, через ссылку на профиль);
+  // всё, что не конечное число, трактуем как «не знаю», а не пропускаем в арифметику как есть.
+  const ent = Number.isFinite(profile.ent) ? profile.ent : null;
   let thr = null;
   for (const p of programs) {
     const f = p.threshold ?? uni.threshold;
@@ -100,7 +102,8 @@ export function evaluate(profile, uni, ctx) {
   }
 
   // 4. Деньги: платно (бюджет против стоимости со скидкой) или грант (балл против прошлогоднего проходного)
-  const budget = profile.budget; // null — не знаю; 0 — только грант; число — ₸ в год
+  // null — не знаю; 0 — только грант; число — ₸ в год; нечисловое (тоже возможно через ссылку) — как null
+  const budget = Number.isFinite(profile.budget) ? profile.budget : null;
   let cost = null;
   const seenDir = new Set();
   for (const p of programs) {

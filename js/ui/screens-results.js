@@ -16,17 +16,35 @@ const footHTML = (s) => `<span>рассмотрено <b>${s.total}</b></span><s
 
 /* взлётная полоса: каждый подходящий и близкий вуз — маркер на шкале балла */
 const LANES = [['fit', 'подходят'], ['near', 'близко']];
-// шкала полосы: 40–100, ниже 40 подходящих почти не бывает; маркеры чередуют высоту, чтобы не слипаться
-const runX = (score) => Math.max(0, Math.min(100, ((score - 40) / 60) * 100));
+// Значок на маркере — тот же, что и на текстовых статус-чипах (bits.js) — статус не должен
+// определяться только цветом заливки, поэтому внутри маркера всегда есть и знак, и число.
+const PLANE_ICON = { fit: '✓', near: '≈' };
+const PLANE_WORD = { fit: 'подходит', near: 'близко' };
+// Шкала обычно 40–100 (там живёт большинство реальных баллов), но если среди показанных вузов
+// есть результат ниже 40 — пол шкалы опускается под него с запасом, иначе такие маркеры слипались
+// бы в одну точку у левого края и разница между ними становилась не видна.
+const runFloor = (run) => {
+  const scores = [...(run.fit ?? []), ...(run.near ?? [])].map((r) => r.score).filter((s) => Number.isFinite(s));
+  return scores.length ? Math.min(40, Math.min(...scores) - 5) : 40;
+};
+const runX = (score, floor = 40) => Math.max(0, Math.min(100, ((score - floor) / (100 - floor)) * 100));
 const ROWS = ['', 'lo', 'mid'];
-const planeHTML = (r, k, i = 0) => `<button class="plane ${k} landing ${ROWS[i % 3]}" data-plane="${r.id}" data-label="${esc(r.uni.short)}" style="left:${runX(r.score)}%; animation-delay:${i * 70}ms" title="${esc(r.uni.short)} · ${r.score}" aria-label="${esc(r.uni.short)}, балл ${r.score}"><b>${r.score}</b></button>`;
+const planeHTML = (r, k, i = 0, floor = 40) => `<button class="plane ${k} landing ${ROWS[i % 3]}" data-plane="${r.id}" data-label="${esc(r.uni.short)}" style="left:${runX(r.score, floor)}%; animation-delay:${i * 70}ms" title="${esc(r.uni.short)} · ${r.score}" aria-label="${esc(r.uni.short)}, ${PLANE_WORD[k]}, балл ${r.score}"><b>${PLANE_ICON[k] ?? ''}${r.score}</b></button>`;
+const axisHTML = (floor) => {
+  const mid = Math.round((floor + 100) / 2);
+  return `<span>${floor}</span><span style="left:${runX(mid, floor)}%">${mid}</span><span style="left:100%">100</span>`;
+};
 function runwayHTML(run) {
+  const floor = runFloor(run);
   return `<div class="runway" aria-label="Вузы по баллу подбора">
-    <div class="axis"><span>40</span><span style="left:${runX(60)}%">60</span><span style="left:${runX(80)}%">80</span><span style="left:100%">100</span></div>
-    ${LANES.map(([k, label]) => `<div class="lane ${k} ${run[k].length > 3 ? 'dense' : ''}" data-lane="${k}"><span class="tag" data-tag>${label} · ${run[k].length}</span>${run[k].map((r, i) => planeHTML(r, k, i)).join('')}</div>`).join('')}
+    <div class="axis">${axisHTML(floor)}</div>
+    ${LANES.map(([k, label]) => `<div class="lane ${k} ${run[k].length > 3 ? 'dense' : ''}" data-lane="${k}"><span class="tag" data-tag>${label} · ${run[k].length}</span>${run[k].map((r, i) => planeHTML(r, k, i, floor)).join('')}</div>`).join('')}
   </div>`;
 }
 function updateRunway(el, run) {
+  const floor = runFloor(run);
+  const axis = $('.axis', el);
+  if (axis) axis.innerHTML = axisHTML(floor);
   const existing = new Map($$('.plane', el).map((x) => [x.dataset.plane, x]));
   for (const [k, label] of LANES) {
     const lane = $(`[data-lane="${k}"]`, el);
@@ -34,8 +52,12 @@ function updateRunway(el, run) {
     lane.classList.toggle('dense', run[k].length > 3);
     run[k].forEach((r, i) => {
       let pl = existing.get(r.id);
-      if (!pl) { const t = document.createElement('div'); t.innerHTML = planeHTML(r, k, i); pl = t.firstElementChild; lane.appendChild(pl); }
-      else { pl.className = `plane ${k} ${ROWS[i % 3]}`; if (pl.parentElement !== lane) lane.appendChild(pl); pl.style.left = `${runX(r.score)}%`; pl.querySelector('b').textContent = r.score; pl.title = `${r.uni.short} · ${r.score}`; }
+      if (!pl) { const t = document.createElement('div'); t.innerHTML = planeHTML(r, k, i, floor); pl = t.firstElementChild; lane.appendChild(pl); }
+      else {
+        pl.className = `plane ${k} ${ROWS[i % 3]}`; if (pl.parentElement !== lane) lane.appendChild(pl);
+        pl.style.left = `${runX(r.score, floor)}%`; pl.querySelector('b').textContent = `${PLANE_ICON[k] ?? ''}${r.score}`;
+        pl.title = `${r.uni.short} · ${r.score}`; pl.setAttribute('aria-label', `${r.uni.short}, ${PLANE_WORD[k]}, балл ${r.score}`);
+      }
       existing.delete(r.id);
     });
   }
@@ -329,14 +351,25 @@ export function shareLink() {
 }
 
 const MONTHS = { 'январ': 1, 'феврал': 2, 'март': 3, 'апрел': 4, 'ма': 5, 'июн': 6, 'июл': 7, 'август': 8, 'сентябр': 9, 'октябр': 10, 'ноябр': 11, 'декабр': 12 };
-function guessDate(text) {
-  // «13–20 июля 2027» → 2027-07-13; «апрель 2027» → 2027-04-01; иначе null
-  const y = (text.match(/20\d\d/) || [])[0];
-  if (!y) return null;
+function guessDate(text, today = new Date()) {
+  // «13–20 июля 2027» → 2027-07-13; «апрель 2027» → 2027-04-01.
+  // «13–20 июля» (год не указан — так бывает у проверенных дат, взятых с источника без
+  // спекуляции на будущий год) больше не теряется молча: месяц/день находим как раньше, а год,
+  // если в тексте его нет, берём ближайший будущий (если этот день в текущем году уже прошёл —
+  // берём следующий), а не выбрасываем событие из календаря целиком.
   const m = Object.keys(MONTHS).find((k) => text.toLowerCase().includes(k));
   if (!m) return null;
+  const month = MONTHS[m];
   const d = (text.match(/(\d{1,2})[–-]?\d{0,2}\s*[а-я]+/) || [])[1];
-  return `${y}${String(MONTHS[m]).padStart(2, '0')}${String(d ? Number(d) : 1).padStart(2, '0')}`;
+  const day = d ? Number(d) : 1;
+  const yMatch = (text.match(/20\d\d/) || [])[0];
+  let year = yMatch ? Number(yMatch) : today.getFullYear();
+  if (!yMatch) {
+    const candidate = new Date(year, month - 1, day);
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if (candidate < todayStart) year += 1;
+  }
+  return `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
 }
 function downloadIcs(steps) {
   const ev = steps.map((s) => ({ s, d: guessDate(s.when.text) })).filter((x) => x.d);

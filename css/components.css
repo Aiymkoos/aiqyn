@@ -68,7 +68,7 @@
 .pass-field:hover { background: var(--paper-2); }
 .pass-field .k { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
 .pass-field .v { display: block; font-family: var(--font-display); font-weight: 800; font-size: 14px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; color: var(--violet-deep); }
-.pass-field .v.blank { color: var(--ink-3); letter-spacing: 0.15em; opacity: 0.6; }
+.pass-field .v.blank { color: var(--ink-3); letter-spacing: 0.15em; } /* opacity убрана: 0.6 поверх --ink-3 давало 2.15:1 — --ink-3 сам по себе уже достаточно приглушён */
 .pass-field .v.printed { animation: print 520ms var(--spring); }
 @keyframes print { from { opacity: 0; transform: translateY(10px) scale(0.9); } to { opacity: 1; transform: none; } }
 .pass-field.now { background: var(--violet-soft); }
@@ -170,10 +170,10 @@
 .runway .lane { position: relative; height: 78px; }
 .runway .lane.dense .plane::after { display: none; }
 .runway .lane .tag { position: absolute; left: 0; top: 2px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
-.plane { position: absolute; top: 10px; width: 26px; height: 26px; margin-left: -13px; border-radius: 50%; display: grid; place-items: center; transition: left 800ms var(--spring), background var(--dur), transform var(--dur) var(--spring); box-shadow: 0 8px 18px -6px rgba(28, 27, 58, 0.35); cursor: pointer; }
-.runway .lane .plane.lo { top: 50px; }
-.runway .lane .plane.mid { top: 30px; }
-.plane b { font-family: var(--font-mono); font-size: 9px; font-weight: 700; color: var(--ink); }
+.plane { position: absolute; top: 9px; width: 30px; height: 30px; margin-left: -15px; border-radius: 50%; display: grid; place-items: center; transition: left 800ms var(--spring), background var(--dur), transform var(--dur) var(--spring); box-shadow: 0 8px 18px -6px rgba(28, 27, 58, 0.35); cursor: pointer; }
+.runway .lane .plane.lo { top: 52px; }
+.runway .lane .plane.mid { top: 31px; }
+.plane b { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
 .plane.fit { background: linear-gradient(160deg, #B7F5DF, #2ED3A5); }
 .plane.near { background: linear-gradient(160deg, #FFE9AE, #FFC857); }
 .plane:hover { transform: scale(1.25); z-index: 2; }

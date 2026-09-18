@@ -86,22 +86,30 @@ test('экран диагностики (languages.length/.map) не долже�
   assert.doesNotThrow(() => { if (p.languages.length >= 2) p.languages.map((l) => l); });
 });
 
-/* ========== 2. Экспорт в календарь (.ics): guessDate() молча теряет события без года/дня ========== */
-// Копия MONTHS/guessDate() из js/ui/screens-results.js:331-340 — функция не экспортирована,
-// поэтому тест воспроизводит её логику построчно для проверки, не трогая исходный файл.
+/* ========== 2. Экспорт в календарь (.ics): guessDate() теперь умеет дату без явного года ========== */
+// ИСПРАВЛЕНО в js/ui/screens-results.js: guessDate() принимает вторым параметром `today` и, если в
+// тексте нет года, берёт ближайшее будущее наступление месяца/дня, а не возвращает null. Копия здесь
+// (функция по-прежнему не экспортирована) обновлена в точности вслед за исходником — тест теперь
+// проверяет ИСПРАВЛЕННОЕ поведение и должен быть зелёным.
 const MONTHS = { 'январ': 1, 'феврал': 2, 'март': 3, 'апрел': 4, 'ма': 5, 'июн': 6, 'июл': 7, 'август': 8, 'сентябр': 9, 'октябр': 10, 'ноябр': 11, 'декабр': 12 };
-function guessDate(text) {
-  const y = (text.match(/20\d\d/) || [])[0];
-  if (!y) return null;
+function guessDate(text, today = new Date()) {
   const m = Object.keys(MONTHS).find((k) => text.toLowerCase().includes(k));
   if (!m) return null;
+  const month = MONTHS[m];
   const d = (text.match(/(\d{1,2})[–-]?\d{0,2}\s*[а-я]+/) || [])[1];
-  return `${y}${String(MONTHS[m]).padStart(2, '0')}${String(d ? Number(d) : 1).padStart(2, '0')}`;
+  const day = d ? Number(d) : 1;
+  const yMatch = (text.match(/20\d\d/) || [])[0];
+  let year = yMatch ? Number(yMatch) : today.getFullYear();
+  if (!yMatch) {
+    const candidate = new Date(year, month - 1, day);
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if (candidate < todayStart) year += 1;
+  }
+  return `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
 }
 
 test('guessDate() должен распознавать дату в каждом событии календаря приёмной кампании (data/calendar.js)', () => {
-  // downloadIcs() (screens-results.js:341-343) молча выбрасывает из .ics все события, для которых
-  // guessDate вернул null, и предупреждает пользователя, только если ОТВАЛИЛИСЬ ВСЕ события разом.
+  // downloadIcs() молча выбрасывает из .ics все события, для которых guessDate вернул null.
   const missing = [];
   for (const [key, entry] of Object.entries(CALENDAR)) {
     const text = val(entry.when);
@@ -114,7 +122,17 @@ test('"Приём заявлений на грант" (единственная 
   const entry = CALENDAR.grantApply;
   const text = val(entry.when);
   assert.equal(entry.when.kind, 'fact', 'это единственная запись календаря с проверенным источником (testcenter.kz) — остальные demo()');
-  assert.notEqual(guessDate(text), null, `guessDate("${text}") вернул null из-за отсутствия года в строке — событие тихо пропадает из aiqyn-plan.ics`);
+  assert.notEqual(guessDate(text), null, `guessDate("${text}") вернул null — событие тихо пропадает из aiqyn-plan.ics`);
+});
+
+test('guessDate() без явного года берёт ближайшее будущее наступление, а не прошедшую дату', () => {
+  // «13–20 июля» проверено относительно фиксированной точки отсчёта: 18 сентября 2026 — то есть
+  // июль уже прошёл в этом году, и результат обязан скакнуть на 2027, а не остаться в 2026.
+  const today = new Date(2026, 8, 18); // 18 сентября 2026
+  assert.equal(guessDate('13–20 июля', today), '20270713');
+  // а если бы дата ещё не наступила в текущем году — год остаётся текущим
+  const beforeJuly = new Date(2026, 3, 1); // 1 апреля 2026
+  assert.equal(guessDate('13–20 июля', beforeJuly), '20260713');
 });
 
 /* ========== 3. Мусорные ent/budget доходят до текста, который видит пользователь ========== */

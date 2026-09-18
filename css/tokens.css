@@ -4,7 +4,7 @@
   --bg-2: #EEEBFF;
   --ink: #1C1B3A;
   --ink-2: #45446A;
-  --ink-3: #7B7A9E;
+  --ink-3: #696886; /* затемнено с #7B7A9E: было 4.10:1 на белом (не проходит WCAG AA), теперь 5.35:1 */
   --line: #E4E1F5;
   --white: #FFFFFF;
   --paper: #FFFFFF;
@@ -15,7 +15,7 @@
   --violet-2: #8B7CF6;
   --violet-deep: #4B3FC4;
   --violet-soft: #E9E5FF;
-  --coral: #FF7A59;
+  --coral: #BF5C43; /* затемнено с #FF7A59: белый текст на чистом коралле давал 2.57:1, теперь 4.35:1 */
   --coral-soft: #FFE4DB;
   --sun: #FFC857;
   --sun-soft: #FFF1CC;
@@ -53,7 +53,10 @@
   --shadow: 0 26px 50px -14px rgba(76, 63, 196, 0.28), 0 6px 16px rgba(28, 27, 58, 0.06);
   --shadow-s: 0 12px 28px -10px rgba(76, 63, 196, 0.22), 0 2px 8px rgba(28, 27, 58, 0.05);
   --shadow-l: 0 40px 80px -20px rgba(76, 63, 196, 0.35), 0 10px 24px rgba(28, 27, 58, 0.08);
-  --grad: linear-gradient(135deg, #6A5AE0 0%, #9B6BFF 55%, #FF7A59 130%);
+  /* средний стоп затемнён с #9B6BFF — сам по себе (55% позиция) он давал только 3.53:1 с белым
+     текстом, хуже, чем сама коралловая точка; посчитано так, чтобы по ВСЕЙ видимой части градиента
+     (0-100% элемента, включая интерполяцию между стопами) белый текст держал не ниже ~5:1 */
+  --grad: linear-gradient(135deg, #6A5AE0 0%, #7450BF 55%, var(--coral) 130%);
   --grad-soft: linear-gradient(135deg, #EDE9FF, #FFE9E2);
 
   --font-display: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;

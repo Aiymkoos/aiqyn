@@ -17,6 +17,33 @@ export const defaultProfile = () => ({
   target: null,         // id выбранного вуза («мой выбор»)
 });
 
+// Приводит произвольный объект (пришедший из ссылки `#/board?p=...` или из localStorage,
+// который мог отредактировать кто угодно) к безопасной форме профиля. Ничего не выбрасывает
+// без причины — то, что не удалось безопасно привести к ожидаемому типу, становится тем же
+// значением, что и «не отвечено» (null/[]/{}), а не мусором, на котором упадёт js/ui/*.
+const asStringArray = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
+const asFiniteOrNull = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const asBoolOrNull = (v) => (v === true || v === false ? v : null);
+const asPlainObject = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
+
+function sanitizeProfile(raw) {
+  return {
+    ...defaultProfile(),
+    interests: asStringArray(raw.interests),
+    ent: asFiniteOrNull(raw.ent),
+    budget: asFiniteOrNull(raw.budget), // 0 — «только грант» — остаётся 0, это конечное число
+    languages: asStringArray(raw.languages),
+    cities: asStringArray(raw.cities),
+    relocate: raw.relocate === true,
+    dorm: asBoolOrNull(raw.dorm),
+    important: asStringArray(raw.important),
+    answered: asPlainObject(raw.answered),
+    done: asPlainObject(raw.done),
+    compare: asStringArray(raw.compare),
+    target: typeof raw.target === 'string' ? raw.target : null,
+  };
+}
+
 let profile = defaultProfile();
 const listeners = new Set();
 
@@ -44,7 +71,7 @@ export function save() {
 export function load() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) profile = { ...defaultProfile(), ...JSON.parse(raw) };
+    if (raw) profile = sanitizeProfile(JSON.parse(raw));
   } catch { profile = defaultProfile(); }
   return profile;
 }
@@ -67,6 +94,6 @@ export function decodeProfile(s) {
     const json = decodeURIComponent(escape(atob(b64)));
     const p = JSON.parse(json);
     if (!p || typeof p !== 'object' || !Array.isArray(p.interests)) return null;
-    return { ...defaultProfile(), ...p };
+    return sanitizeProfile(p);
   } catch { return null; }
 }

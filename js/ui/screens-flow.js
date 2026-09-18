@@ -1,10 +1,15 @@
 // Экраны 1–3: вход, анкета (6 вопросов), диагностика
-import { esc, $, $$, provChip } from './bits.js';
+import { esc, $, $$, provChip, toast } from './bits.js';
 import { boardHTML } from './board.js';
 import { tengeShort, unis } from '../engine/format.js';
 import { getProfile, update, QUESTIONS } from '../state.js';
 import { directionLabel, langLabel } from '../../data/directions.js';
 import { val, provenance } from '../engine/facts.js';
+
+// На уровне модуля (не внутри рендера вопроса 6) — нужен и там, и в обработчике клика, чтобы
+// можно было назвать по имени критерий, который тихо вытесняется при выборе четвёртого.
+const IMPORTANT = [['money', 'Цена'], ['grant', 'Шанс на грант'], ['city', 'Город'], ['language', 'Язык'], ['dorm', 'Общежитие'], ['prestige', 'Статус вуза']];
+const IMPORTANT_LABEL = new Map(IMPORTANT);
 
 /* ---------- 1. Вход ---------- */
 export function entry(root, ctx) {
@@ -91,7 +96,6 @@ export function profile(root, ctx, n) {
     body = `<div class="chips">${ctx.cities.map((c) => `<button class="chip" data-city="${c}" aria-pressed="${p.cities.includes(c)}">${c}</button>`).join('')}</div>
       <button class="chip lg" data-relocate aria-pressed="${p.relocate}">Готов переехать в другой город</button>`;
   } else if (q.key === 'dorm') {
-    const IMPORTANT = [['money', 'Цена'], ['grant', 'Шанс на грант'], ['city', 'Город'], ['language', 'Язык'], ['dorm', 'Общежитие'], ['prestige', 'Статус вуза']];
     body = `<div class="seg" role="group" aria-label="Общежитие">
         <button data-dorm="true" aria-pressed="${p.dorm === true}">Нужно</button>
         <button data-dorm="false" aria-pressed="${p.dorm === false}">Не нужно</button>
@@ -162,9 +166,17 @@ export function profile(root, ctx, n) {
     mark({ dorm: v });
   }));
   $$('[data-imp]', root).forEach((b) => (b.onclick = () => {
-    let important = toggleIn(getProfile().important, b.dataset.imp).slice(-3);
+    const before = getProfile().important;
+    let important = toggleIn(before, b.dataset.imp).slice(-3);
     $$('[data-imp]', root).forEach((x) => x.setAttribute('aria-pressed', String(important.includes(x.dataset.imp))));
     mark({ important });
+    // выбор четвёртого молча вытеснял самый первый — теперь явно говорим, кто и почему пропал
+    const evicted = before.find((k) => k !== b.dataset.imp && !important.includes(k));
+    if (evicted) {
+      const evictedLabel = IMPORTANT_LABEL.get(evicted) ?? evicted;
+      const addedLabel = IMPORTANT_LABEL.get(b.dataset.imp) ?? b.dataset.imp;
+      toast(`<div class="t">Максимум три</div><ul><li>«${esc(evictedLabel)}» больше не в списке важного — освободило место «${esc(addedLabel)}»</li></ul>`, 3400);
+    }
   }));
   $('[data-next]', root).onclick = () => {
     // вопрос считается отвеченным, даже если оставили значение по умолчанию
