@@ -62,7 +62,7 @@ export function board(root, ctx) {
   const runwayEl = $('[data-runway]', root);
   const below = $('[data-below]', root);
   const above = $('[data-above]', root);
-  const marquee = (r) => `DEPARTURES · ${r.summary.total} ВУЗА · ПОДХОДЯТ ${r.summary.fit} · БЛИЗКО ${r.summary.near} · НАЖМИ НА ТАЛОН, ЧТОБЫ УВИДЕТЬ ПОЧЕМУ · `;
+  const marquee = (r) => `Табло · ${r.summary.total} вуза · подходят ${r.summary.fit} · близко ${r.summary.near} · нажми на талон, чтобы увидеть почему · `;
   const bindPlanes = () => $$('.plane', runwayEl).forEach((pl) => (pl.onclick = () => openDetail(run.results.find((r) => r.id === pl.dataset.plane), ctx, () => recompute('Изменил цель'))));
   const renderBelow = () => {
     const forks = whatIf(getProfile(), ctx.universities, ctx, ctx.cities);

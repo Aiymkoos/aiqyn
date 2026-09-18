@@ -56,15 +56,6 @@ function route() {
 
 load();
 subscribe(() => ctx.renderPass());
-// на экранах результатов талон сворачивается при прокрутке, чтобы не съедать экран телефона
-let lastY = 0;
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  const pass = $('#pass');
-  if (y > 140 && y > lastY) pass.classList.add('compact');
-  else if (y < 60 || y < lastY - 40) pass.classList.remove('compact');
-  lastY = y;
-}, { passive: true });
 window.addEventListener('hashchange', route);
 window.addEventListener('error', (e) => { if (!$('#screen').innerHTML) res.error($('#screen'), e.error ?? e.message); });
 route();

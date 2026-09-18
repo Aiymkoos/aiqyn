@@ -14,10 +14,10 @@ export function entry(root, ctx) {
   root.innerHTML = `<section class="hero">
     <div class="brandline"><span class="logo">AI<b>QYN</b></span><span class="eyebrow">айқын — «ясный» по-казахски</span></div>
     <h1 class="display h1">Куда поступать — <em>и почему именно туда</em></h1>
-    <div class="flapword" aria-hidden="true"><span>Каждый вуз:</span><span class="w flap" data-flapword>ПОДХОДИТ</span></div>
+    <div class="flapword" aria-hidden="true"><span>Каждый вуз:</span><span class="w flap" data-flapword>подходит</span></div>
     <p class="lead">Шесть вопросов — и вместо списка вузов ты получаешь табло: кто подходит, кто близко, и по какой причине. Поменяешь ответ — талоны перещёлкнутся у тебя на глазах.</p>
     <div class="hero-board" aria-label="Пример табло">
-      ${boardHTML(run.results.slice(0, 4), { marquee: 'ПРИМЕР · IT · ЕНТ 96 · 1,8 МЛН ₸ · АЛМАТЫ · СВОЙ МАРШРУТ — НИЖЕ · ', foot: `<span>пример для профиля «IT, Алматы»: <b>${run.summary.fit}</b> подходят, <b>${run.summary.near}</b> близко из ${run.summary.total}</span>` })}
+      ${boardHTML(run.results.slice(0, 4), { marquee: 'Пример · IT · ЕНТ 96 · 1,8 млн ₸ · Алматы · свой маршрут — ниже · ', foot: `<span>пример для профиля «IT, Алматы»: <b>${run.summary.fit}</b> подходят, <b>${run.summary.near}</b> близко из ${run.summary.total}</span>` })}
     </div>
     <ul class="promise">
       <li class="numbered"><span class="n">01</span><span><b>С объяснением.</b> Балл собран из слагаемых, у отказа названа причина и разрыв.</span></li>
@@ -32,7 +32,7 @@ export function entry(root, ctx) {
   </section>`;
   bindGo(root);
   // слово на табло перещёлкивается: подходит → близко → почему → …
-  const words = ['ПОДХОДИТ', 'БЛИЗКО', 'НЕ ПРОХОДИТ', 'И ПОЧЕМУ'];
+  const words = ['подходит', 'близко', 'не проходит', 'и почему'];
   const w = $('[data-flapword]', root);
   let i = 0;
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;

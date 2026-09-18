@@ -16,7 +16,7 @@ const rowHTML = (r, i = 0) => `<button class="brow ${r.status}" data-id="${r.id}
   <span class="stub"><span><span class="flap sc ${r.status !== 'fit' ? 'dim' : ''}">${r.score == null ? '—' : r.score}</span><small>${STUB_LABEL[r.status] ?? ''}</small></span></span>
 </button>`;
 
-export function boardHTML(results, { title = 'DEPARTURES · ВУЗЫ', skeleton = false, foot = '', marquee = '' } = {}) {
+export function boardHTML(results, { title = 'Табло · вузы', skeleton = false, foot = '', marquee = '' } = {}) {
   const rows = skeleton
     ? Array.from({ length: 5 }, () => `<div class="brow skeleton"><span class="main"><span class="code">········</span><span class="name">··········</span><span class="meta">·······</span><span class="stc"><span class="st">·······</span></span></span><span class="stub"><span class="sc">··</span></span></div>`).join('')
     : results.map(rowHTML).join('');

@@ -48,7 +48,7 @@ export function renderPass(profile, stationId, { currentQuestion = null } = {}) 
       <span class="dot">${i === idx ? '●' : i + 1}</span><span class="lbl">${s.label}</span></button>`;
   }).join('');
   el.innerHTML = `<div class="pass-card">
-    <div class="pass-top"><span class="brand">AI<b>QYN</b> · <span class="full">ПОСАДОЧНЫЙ </span>ТАЛОН</span><span class="where">${idx + 1}/7 · ${STATIONS[idx].label}</span></div>
+    <div class="pass-top"><span class="brand">Ai<b>qyn</b> · <span class="full">посадочный </span>талон</span><span class="where">${idx + 1}/7 · ${STATIONS[idx].label}</span></div>
     <div class="pass-fields">${fields}</div>
     <nav class="stations" aria-label="Этапы маршрута">${stations}</nav>
   </div>`;

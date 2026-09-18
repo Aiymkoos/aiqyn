@@ -56,8 +56,8 @@
   --grad: linear-gradient(135deg, #6A5AE0 0%, #9B6BFF 55%, #FF7A59 130%);
   --grad-soft: linear-gradient(135deg, #EDE9FF, #FFE9E2);
 
-  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
-  --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   --gutter: 16px;

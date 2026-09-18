@@ -7,7 +7,7 @@ export const WEIGHTS = { direction: 35, money: 20, city: 15, ent: 15, language: 
 export const LABELS = {
   direction: 'Направления', money: 'Деньги', city: 'Город', ent: 'Балл ЕНТ', language: 'Язык обучения', dorm: 'Общежитие',
 };
-export const STATUS = { fit: 'ПОДХОДИТ', near: 'БЛИЗКО', insufficient: 'НЕТ ДАННЫХ', out: 'НЕ ПРОХОДИТ', incomplete: 'ЗАПОЛНИ ПРОФИЛЬ' };
+export const STATUS = { fit: 'Подходит', near: 'Близко', insufficient: 'Нет данных', out: 'Не проходит', incomplete: 'Заполни профиль' };
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const round = (x) => Math.round(x);
