@@ -22,10 +22,13 @@ LOCUS Startup Hackathon 2026, кейс 02. Код сабмита `LOCUSCASE2`.
 ключи и пароли в репозитории; копирование дизайна LOCUS.
 
 ## Стек
-Заполнить, когда код будет в репозитории.
+Чистые HTML/CSS/JS (ES-модули), без сборщика. Движок в `js/engine`, экраны в `js/ui`,
+данные в `data/` (universities.js генерируется `python tools/build-data.py` из `tools/cache`).
+Деплой — GitHub Pages из `main`: https://aiymkoos.github.io/aiqyn/
 
 ## Как запускать
-Заполнить.
+`python tools/serve.py 8080` → http://127.0.0.1:8080 · тесты: `npm test` (node:test, 20 тестов).
+Проверять на 390px: экраны результатов — `#/board`, `#/compare`, `#/plan`, `#/next`.
 
 ## Правила работы
 - Коммит + push после каждого законченного шага — жюри проверяет историю git.
