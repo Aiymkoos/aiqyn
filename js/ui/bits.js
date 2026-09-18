@@ -60,6 +60,7 @@ export function toast(html, ms = 5200) {
   const el = $('#toast');
   el.innerHTML = html;
   el.hidden = false;
+  el.onclick = () => { clearTimeout(el._t); el.hidden = true; };
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.hidden = true; }, ms);
 }

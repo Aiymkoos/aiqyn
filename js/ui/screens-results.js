@@ -147,7 +147,7 @@ function showDelta(d, why) {
   for (const x of d.dropped) items.push(`<li class="down">↓ <b>${esc(x.short)}</b> — ${STATUS[x.to].toLowerCase()}${x.cause ? `: ${esc(x.cause)}` : ''}</li>`);
   for (const x of d.added) items.push(`<li class="up">↑ <b>${esc(x.short)}</b> — теперь ${STATUS[x.to].toLowerCase()}${x.cause ? ` (${esc(x.cause)})` : ''}</li>`);
   for (const x of d.moved.slice(0, 3)) items.push(`<li>${x.kind === 'up' ? '↑' : '↓'} <b>${esc(x.short)}</b> — с ${x.from}-го на ${x.to}-е место (${x.prevScore} → ${x.score})</li>`);
-  toast(`<div class="t">Маршрут перестроен</div><div class="small" style="opacity:.8">${esc(why)} · подходят: ${d.fitBefore} → ${d.fitAfter}</div><ul>${items.slice(0, 5).join('')}</ul>`, 7000);
+  toast(`<div class="t">Маршрут перестроен</div><div class="small" style="opacity:.8">${esc(why)} · подходят: ${d.fitBefore} → ${d.fitAfter}</div><ul>${items.slice(0, 3).join('')}</ul>`, 7000);
 }
 
 /* пульт — быстрое изменение ключевых ответов */
